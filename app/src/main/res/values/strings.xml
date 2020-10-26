@@ -14,4 +14,20 @@
     <string name="connection_succeed">Successful authentication !</string>
     <string name="button_login_text_logged">View Profile</string>
     <string name="button_login_text_not_logged">Connection</string>
+
+    <!-- BOTTOM NAVIGATION VIEW -->
+    <string name="bottom_navigation_menu_mapview">Map View</string>
+    <string name="bottom_navigation_menu_listview">List View</string>
+    <string name="bottom_navigation_workmates">Workmates</string>
+    <string name="bottom_navigation_chat">Chat</string>
+
+    <!-- DRAWER -->
+    <string name="drawer_yourlunch">Your lunch</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_logout">Logout</string>
+
+
+
+
+
 </resources>

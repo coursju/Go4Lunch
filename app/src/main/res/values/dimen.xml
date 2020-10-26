@@ -17,10 +17,17 @@
     <dimen name="end_margin">40dip</dimen>
 
     <dimen name="title_size">52sp</dimen>
+    <dimen name="title_drawer_size">45sp</dimen>
+
     <dimen name="text_size_description">11sp</dimen>
     <dimen name="text_size">12sp</dimen>
     <dimen name="text_size_button">13sp</dimen>
     <dimen name="text_size_mini">8sp</dimen>
+
+    <!-- Default NavigationView Header height -->
+    <dimen name="nav_header_height">250dp</dimen>
+    <dimen name="nav_header_width">270dp</dimen>
+
 
 
 </resources>
