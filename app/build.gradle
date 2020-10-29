@@ -13,7 +13,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,6 +39,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+
     //GLIDE
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
@@ -55,13 +56,13 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
     implementation 'com.firebaseui:firebase-ui-firestore:6.3.0'
 
-//    // FirebaseUI for Cloud Storage
-//    implementation 'com.firebaseui:firebase-ui-storage:6.3.0'
-//
-//    //FIREASE MESSAGING
-//    implementation 'com.google.firebase:firebase-messaging:20.3.0'
-//
-//    // Easy Permissions
-//    implementation 'pub.devrel:easypermissions:3.0.0'
+    // FirebaseUI for Cloud Storage
+    implementation 'com.firebaseui:firebase-ui-storage:6.3.0'
+
+    //FIREASE MESSAGING
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
+
+    // Easy Permissions
+    implementation 'pub.devrel:easypermissions:3.0.0'
 
 }
