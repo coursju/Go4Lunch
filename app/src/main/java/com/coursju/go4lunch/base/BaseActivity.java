@@ -28,10 +28,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract int getFragmentLayout();
 
-    protected void configureToolbar(){
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-    }
+//    protected void configureToolbar(){
+//        ActionBar ab = getSupportActionBar();
+//        ab.setDisplayHomeAsUpEnabled(true);
+//    }
 
 
     @Nullable
