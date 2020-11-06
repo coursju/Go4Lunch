@@ -156,13 +156,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Boolean updateMainFragment(Integer integer){
         switch (integer) {
             case R.id.action_map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_listview:
-                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_LISTVIEW);
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new RestaurantListFragment()).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_workmates:
-                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_WORKMATES);
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new WorkmatesListFragment()).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_chat:
                 //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
@@ -172,6 +172,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void placesInitialisation(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit(); //.addToBackStack(null)
+
         Places.initialize(getApplicationContext(), apiKey);
 
         PlacesClient placesClient = Places.createClient(this);
