@@ -1,8 +1,16 @@
 package com.coursju.go4lunch.controler;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +23,16 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,8 +41,6 @@ import com.google.android.material.navigation.NavigationView;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private MapsFragment mMapsFragment = MapsFragment.getInstance();
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -156,7 +166,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Boolean updateMainFragment(Integer integer){
         switch (integer) {
             case R.id.action_map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit(); //.addToBackStack(null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_listview:
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new RestaurantListFragment()).commit(); //.addToBackStack(null)
@@ -172,7 +182,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void placesInitialisation(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit(); //.addToBackStack(null)
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit(); //.addToBackStack(null)
 
         Places.initialize(getApplicationContext(), apiKey);
 
