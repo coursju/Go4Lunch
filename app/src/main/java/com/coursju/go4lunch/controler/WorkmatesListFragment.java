@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.coursju.go4lunch.R;
+import com.coursju.go4lunch.adapter.MyWorkmatesListRecyclerViewAdapter;
 import com.coursju.go4lunch.controler.dummy.DummyContent;
 
 /**

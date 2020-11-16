@@ -1,4 +1,4 @@
-package com.coursju.go4lunch.controler;
+package com.coursju.go4lunch.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 

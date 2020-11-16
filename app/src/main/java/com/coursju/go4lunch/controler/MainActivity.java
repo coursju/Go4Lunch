@@ -53,10 +53,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.relativ_layout_search)
     RelativeLayout relativLayoutSearch;
 
-    //TODO put back with getResources().getString(R.string.google_key)
-    private String apiKey = "AIzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk";
-
-    
 
     @Override
     public int getFragmentLayout() {
@@ -71,7 +67,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomView();
-        this.placesInitialisation();
+        this.launchFirstFragment();
     }
 
     @Override
@@ -181,12 +177,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    private void placesInitialisation(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit(); //.addToBackStack(null)
-
-        Places.initialize(getApplicationContext(), apiKey);
-
-        PlacesClient placesClient = Places.createClient(this);
-
+    private void launchFirstFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit();
     }
+
+
 }
