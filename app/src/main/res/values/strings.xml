@@ -40,6 +40,8 @@
 
     <!-- Toolbar -->
     <string name="toolbar_search">Search</string>
+    <string name="searchbar_hint">Enter a restaurant name</string>
+
 
 
 

@@ -10,11 +10,14 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseActivity;
+import com.coursju.go4lunch.base.BaseFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.libraries.places.api.Places;
@@ -52,6 +56,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     BottomNavigationView bottomNavigationView;
     @BindView(R.id.relativ_layout_search)
     RelativeLayout relativLayoutSearch;
+    @BindView(R.id.input_search)
+    EditText inputSearch;
+
 
 
     @Override
@@ -182,4 +189,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+
+    public  EditText getInputSearch(){return this.inputSearch;}
 }

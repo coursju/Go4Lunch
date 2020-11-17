@@ -27,10 +27,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +44,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private SupportMapFragment mapFragment = null;
-    private static final float DEFAULT_ZOOM = 15f;
+    private static final float DEFAULT_ZOOM = 19f;
     private FloatingActionButton mapsFloatingButton;
     private String TAG = "--test--";
 
@@ -86,7 +88,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         updateLocationUI();
         getDeviceLocation();
-        test();
         //mMap.getUiSettings().setZoomControlsEnabled(true);
 
     }
@@ -104,6 +105,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
                             Location currentLocation = (Location) task.getResult();
                             currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, DEFAULT_ZOOM));
+                            findNearbyRestaurants();
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -255,10 +257,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 //        }
 //    }
 //
-    public void test(){
+    public void findNearbyRestaurants(){
         // Use fields to define the data types to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.TYPES,
-                   Place.Field.LAT_LNG);//Collections.singletonList(Place.Field.NAME);
+                   Place.Field.LAT_LNG, Place.Field.ID);//Collections.singletonList(Place.Field.NAME);
 
 // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
@@ -269,16 +271,24 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     FindCurrentPlaceResponse response = task.getResult();
+
+                    List<String> listIDresto = new ArrayList<>();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        if (placeLikelihood.getPlace().getTypes().contains(Place.Type.RESTAURANT))Log.i(TAG,"restaurant");
+                        if (placeLikelihood.getPlace().getTypes().contains(Place.Type.RESTAURANT)
+                            || placeLikelihood.getPlace().getTypes().contains(Place.Type.BAR)
+                            || placeLikelihood.getPlace().getTypes().contains(Place.Type.CAFE)
+                            || placeLikelihood.getPlace().getTypes().contains(Place.Type.MEAL_TAKEAWAY)){
 
+                            listIDresto.add(placeLikelihood.getPlace().getId());
 
-                        Log.i(TAG, String.format("Place '%s' has likelihood: %f ",
-                                placeLikelihood.getPlace().getName(),
-                                placeLikelihood.getLikelihood())
-                        );
-
+                            Log.i(TAG, String.format("Place '%s' has ID: %s ",
+                                    placeLikelihood.getPlace().getName(),
+                                    placeLikelihood.getPlace().getId()));
+                        }
                     }
+                    addToRestaurantsIDList(listIDresto);
+                    showRestaurants(restaurantsIDList);
+
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
@@ -293,6 +303,38 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
             getLocationPermission();
         }
 
+    }
+
+    @Override
+    protected void showRestaurants(List<String> restaurantsIDList){
+        Log.i(TAG,"showRestaurants: "+restaurantsIDList.toString());
+        mMap.clear();
+        for (String resto : restaurantsIDList){
+// Specify the fields to return.
+            final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME);
+
+// Construct a request object, passing the place ID and fields array.
+            final FetchPlaceRequest request = FetchPlaceRequest.newInstance(resto, placeFields);
+
+            mPlacesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                Place place = response.getPlace();
+            mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName())).setTag(place.getId());
+            }).addOnFailureListener((exception) -> {
+                if (exception instanceof ApiException) {
+                    final ApiException apiException = (ApiException) exception;
+                    Log.e(TAG, "Place not found: " + exception.getMessage());
+                    final int statusCode = apiException.getStatusCode();
+                    // TODO: Handle error with given status code.
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void updateRestaurantsIDList(List idList){
+        restaurantsIDList.clear();
+        restaurantsIDList.addAll(idList);
+        showRestaurants(restaurantsIDList);
     }
 
 }
