@@ -6,8 +6,6 @@
     android:name="com.coursju.go4lunch.controler.RestaurantListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".controler.RestaurantListFragment"
     tools:listitem="@layout/fragment_restaurant_list_item" />

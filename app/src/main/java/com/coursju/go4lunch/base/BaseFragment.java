@@ -16,44 +16,52 @@ import androidx.fragment.app.Fragment;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.controler.MainActivity;
+import com.coursju.go4lunch.modele.Restaurant;
+import com.coursju.go4lunch.utils.RestaurantsListBuilder;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BaseFragment extends Fragment {
 
-    private static final String TAG = "--testbase--";
+    private static final String TAG = "--test_BaseFragment--";
     protected FusedLocationProviderClient mFusedLocationProviderClient;
-    protected LatLng currentPosition;
+    protected static LatLng currentPosition;
     protected Location mLastKnownLocation;
-    protected PlacesClient mPlacesClient;
+    public static PlacesClient mPlacesClient;
     protected final LatLng mDefaultLocation = new LatLng(-21.052633331, 55.2267300518);
 
-    protected List<String> restaurantsIDListBase = new ArrayList<>();
-    protected List<String> restaurantsIDList = new ArrayList<>();
+    protected static List<String> restaurantsIDListBase ;//= new ArrayList<>();
+    protected static List<String> restaurantsIDList;// = new ArrayList<>();
+    protected static List<Restaurant> restaurantsListBase = new ArrayList<>();
+    protected static List<Restaurant> restaurantsList = new ArrayList<>();
 
     protected static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     protected static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     protected static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     protected Boolean mLocationPermissionGranted = false;
+    protected RestaurantsListBuilder mRestaurantsListBuilder = new RestaurantsListBuilder();
 
     public static double BOUNDS = 0.02;
 
     protected MainActivity mMainActivity;
 
-    protected void showRestaurants(List<String> restaurantsIDList){}
-    protected void updateRestaurantsIDList(List idList){}
+    protected void showRestaurants(List<String> restoList){}
+//    protected void updateRestaurantsIDList(List idList){}
 
 
 
@@ -95,12 +103,22 @@ public class BaseFragment extends Fragment {
     }
 
     protected void addToRestaurantsIDList(List<String> restaurantsID){
-        restaurantsIDList.clear();
+        restaurantsIDList = new ArrayList<>();//.clear();
         restaurantsIDList.addAll(restaurantsID);
 
-        restaurantsIDListBase.clear();
+        restaurantsIDListBase = new ArrayList<>();//.clear();
         restaurantsIDListBase.addAll(restaurantsID);
     }
+
+    protected void addToRestaurantsList(List<Restaurant> restaurantsList){
+        restaurantsList.clear();
+        restaurantsList.addAll(restaurantsList);
+
+        restaurantsListBase.clear();
+        restaurantsListBase.addAll(restaurantsList);
+    }
+
+
 
     public void searchByFilteringRestaurants(String query){
         // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
@@ -123,6 +141,8 @@ public class BaseFragment extends Fragment {
 
         if (query.equals("")){
             updateRestaurantsIDList(restaurantsIDListBase);
+            //updateRestaurantsList(restaurantsListBase);
+
         }else {
             mPlacesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
                 for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
@@ -130,9 +150,14 @@ public class BaseFragment extends Fragment {
                         Log.i(TAG, prediction.getPlaceId());
                         Log.i(TAG, prediction.getPrimaryText(null).toString());
                         idList.add(prediction.getPlaceId());
-                        updateRestaurantsIDList(idList);
+                        //updateRestaurantsIDList(idList);
+
                     }
                 }
+                updateRestaurantsIDList(idList);
+                //updateRestaurantsList(mRestaurantsListBuilder.restaurantsListBuilder(idList));
+
+
             }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     ApiException apiException = (ApiException) exception;
@@ -140,8 +165,14 @@ public class BaseFragment extends Fragment {
                 }
             });
         }
-
     }
+
+    protected void updateRestaurantsIDList(List idList){
+        restaurantsIDList.clear();
+        restaurantsIDList.addAll(idList);
+        showRestaurants(restaurantsIDList);
+    }
+
 
 
 }

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseFragment;
+import com.coursju.go4lunch.modele.Restaurant;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,9 +46,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private SupportMapFragment mapFragment = null;
-    private static final float DEFAULT_ZOOM = 19f;
+    private static final float DEFAULT_ZOOM = 18f;
     private FloatingActionButton mapsFloatingButton;
-    private String TAG = "--test--";
+    private String TAG = "--test_MapFragment--";
 
 
 
@@ -88,6 +90,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         updateLocationUI();
         getDeviceLocation();
+        configureMarkersListeners();
         //mMap.getUiSettings().setZoomControlsEnabled(true);
 
     }
@@ -178,85 +181,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
         }
     }
 
-    //**********************************
-
-//    private void showCurrentPlace() {
-//        if (mMap == null) {
-//            return;
-//        }
-//
-//        if (mLocationPermissionGranted) {
-//            // Use fields to define the data types to return.
-//            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
-//                    Place.Field.LAT_LNG);
-//
-//            // Use the builder to create a FindCurrentPlaceRequest.
-//            FindCurrentPlaceRequest request =
-//                    FindCurrentPlaceRequest.newInstance(placeFields);
-//
-//            // Get the likely places - that is, the businesses and other points of interest that
-//            // are the best match for the device's current location.
-//            @SuppressWarnings("MissingPermission") final
-//            Task<FindCurrentPlaceResponse> placeResult =
-//                    mPlacesClient.findCurrentPlace(request);
-//            placeResult.addOnCompleteListener (new OnCompleteListener<FindCurrentPlaceResponse>() {
-//                @Override
-//                public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
-//                    if (task.isSuccessful() && task.getResult() != null) {
-//                        FindCurrentPlaceResponse likelyPlaces = task.getResult();
-//
-//                        // Set the count, handling cases where less than 5 entries are returned.
-//                        int count;
-//                        if (likelyPlaces.getPlaceLikelihoods().size() < M_MAX_ENTRIES) {
-//                            count = likelyPlaces.getPlaceLikelihoods().size();
-//                        } else {
-//                            count = M_MAX_ENTRIES;
-//                        }
-//
-//                        int i = 0;
-//                        mLikelyPlaceNames = new String[count];
-//                        mLikelyPlaceAddresses = new String[count];
-//                        mLikelyPlaceAttributions = new List[count];
-//                        mLikelyPlaceLatLngs = new LatLng[count];
-//
-//                        for (PlaceLikelihood placeLikelihood : likelyPlaces.getPlaceLikelihoods()) {
-//                            // Build a list of likely places to show the user.
-//                            mLikelyPlaceNames[i] = placeLikelihood.getPlace().getName();
-//                            mLikelyPlaceAddresses[i] = placeLikelihood.getPlace().getAddress();
-//                            mLikelyPlaceAttributions[i] = placeLikelihood.getPlace()
-//                                    .getAttributions();
-//                            mLikelyPlaceLatLngs[i] = placeLikelihood.getPlace().getLatLng();
-//
-//                            i++;
-//                            if (i > (count - 1)) {
-//                                break;
-//                            }
-//                        }
-//
-//                        // Show a dialog offering the user the list of likely places, and add a
-//                        // marker at the selected place.
-//                        MapsActivityCurrentPlace.this.openPlacesDialog();
-//                    }
-//                    else {
-//                        Log.e(TAG, "Exception: %s", task.getException());
-//                    }
-//                }
-//            });
-//        } else {
-//            // The user has not granted permission.
-//            Log.i(TAG, "The user did not grant location permission.");
-//
-//            // Add a default marker, because the user hasn't selected a place.
-//            mMap.addMarker(new MarkerOptions()
-//                    .title(getString(R.string.default_info_title))
-//                    .position(mDefaultLocation)
-//                    .snippet(getString(R.string.default_info_snippet)));
-//
-//            // Prompt the user for permission.
-//            getLocationPermission();
-//        }
-//    }
-//
     public void findNearbyRestaurants(){
         // Use fields to define the data types to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.TYPES,
@@ -281,12 +205,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
                             listIDresto.add(placeLikelihood.getPlace().getId());
 
-                            Log.i(TAG, String.format("Place '%s' has ID: %s ",
+                            Log.i(TAG, String.format("Place '%s' has ID: %s --",
                                     placeLikelihood.getPlace().getName(),
                                     placeLikelihood.getPlace().getId()));
                         }
                     }
                     addToRestaurantsIDList(listIDresto);
+
+//                    List<Restaurant> restos = mRestaurantsListBuilder.restaurantsListBuilder(listIDresto);
+//                    addToRestaurantsList(restos);
+
                     showRestaurants(restaurantsIDList);
 
                 } else {
@@ -306,18 +234,20 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     @Override
-    protected void showRestaurants(List<String> restaurantsIDList){
-        Log.i(TAG,"showRestaurants: "+restaurantsIDList.toString());
+    protected void showRestaurants(List<String> restoList){
+        Log.i(TAG,"showRestaurants: "+restoList.toString());
+
         mMap.clear();
-        for (String resto : restaurantsIDList){
+        for (String resto : restoList){
 // Specify the fields to return.
             final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME);
-
-// Construct a request object, passing the place ID and fields array.
+//
+//// Construct a request object, passing the place ID and fields array.
             final FetchPlaceRequest request = FetchPlaceRequest.newInstance(resto, placeFields);
-
+//
             mPlacesClient.fetchPlace(request).addOnSuccessListener((response) -> {
                 Place place = response.getPlace();
+
             mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName())).setTag(place.getId());
             }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
@@ -330,11 +260,21 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
         }
     }
 
-    @Override
-    protected void updateRestaurantsIDList(List idList){
-        restaurantsIDList.clear();
-        restaurantsIDList.addAll(idList);
-        showRestaurants(restaurantsIDList);
+//    @Override
+//    protected void updateRestaurantsIDList(List idList){
+//        restaurantsIDList.clear();
+//        restaurantsIDList.addAll(idList);
+//        showRestaurants(restaurantsIDList);
+//    }
+
+    private void configureMarkersListeners(){
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(getContext(),(String)marker.getTag(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 
 }

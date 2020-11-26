@@ -11,7 +11,7 @@ public class Workmate {
     private String mWorkmateFirstName = "";
     private String mWorkmateEmail = "";
     private Restaurant mYourLunch = null;
-    private List<Restaurant> mLikedRestaurants = new ArrayList<>();
+    private List<Restaurant> mLikedRestaurants = new ArrayList<>();//String
     //preferences, settings = notifications, distances...
 
     public Workmate (String uid, String workmateName, String workmatePicture){
