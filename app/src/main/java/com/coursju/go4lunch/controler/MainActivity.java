@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -58,8 +59,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     RelativeLayout relativLayoutSearch;
     @BindView(R.id.input_search)
     EditText inputSearch;
-
-
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     @Override
     public int getFragmentLayout() {
@@ -98,7 +99,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         }
 
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -120,7 +120,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         return true;
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void configureMainToolbar(){
@@ -188,7 +187,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit();
     }
 
+    public EditText getInputSearch(){return this.inputSearch;}
+
+    public ProgressBar getProgressBar(){return this.mProgressBar;}
+
+    public BottomNavigationView getBottomNavigationView(){return bottomNavigationView;}
 
 
-    public  EditText getInputSearch(){return this.inputSearch;}
 }

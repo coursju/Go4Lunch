@@ -2,19 +2,15 @@ package com.coursju.go4lunch.controler;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.coursju.go4lunch.R;
-import com.coursju.go4lunch.adapter.MyWorkmatesListRecyclerViewAdapter;
-import com.coursju.go4lunch.controler.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
@@ -63,7 +59,7 @@ public class WorkmatesListFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new MyWorkmatesListRecyclerViewAdapter(DummyContent.ITEMS));
+            //recyclerView.setAdapter(new MyWorkmatesListRecyclerViewAdapter(DummyContent.ITEMS));
         }
         return view;
     }

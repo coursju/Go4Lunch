@@ -1,8 +1,10 @@
 package com.coursju.go4lunch.adapter;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,32 +14,20 @@ import android.widget.TextView;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseFragment;
-import com.coursju.go4lunch.controler.RestaurantListFragment;
-import com.coursju.go4lunch.controler.dummy.DummyContent.DummyItem;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
-import static com.coursju.go4lunch.base.BaseFragment.mPlacesClient;
-
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<MyRestaurantListRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "RestaurantListRecycler";
     private final List<Restaurant> mValues;
-    Bitmap bitmap;
-
 
     public MyRestaurantListRecyclerViewAdapter(List<Restaurant> items) {
         mValues = items;
@@ -50,16 +40,22 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        //holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getName());
-        holder.mContentView.setText(mValues.get(position).getAddress());
+        holder.mName.setText(mValues.get(position).getName());
+        holder.mAddress.setText(mValues.get(position).getAddress());
+        holder.mDistance.setText(mValues.get(position).getDistance()+" m");
+        holder.mWorkmatesNumber.setText("(2)");//mValues.get(position).getExpectedWorkmates().size());
+        holder.itemRestoOverview.setImageBitmap(mValues.get(position).getBitmap());
 
-        if (mValues.get(position).getRestaurantPicture() != null) {
-            Log.i("--bindview--", "into");
-            getBitmapFromMetadata(mValues.get(position).getRestaurantPicture(), holder);
-        }
+        int day = LocalDate.now().getDayOfWeek().getValue();//.getDisplayName(TextStyle.NARROW_STANDALONE, Locale.ENGLISH);
+//        if (mValues.get(position).getOpeningHours() != null){
+//            Log.i(TAG,mValues.get(position).getOpeningHours().get(day)+" name: "+mValues.get(position).getName());
+//
+//        }
+
+
     }
 
     @Override
@@ -68,45 +64,32 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mName;
+        public final TextView mAddress;
+        public final TextView mOpeningHours;
+        public final TextView mDistance;
+        public final TextView mWorkmatesNumber;
+        public final ImageView mStar1;
+        public final ImageView mStar2;
+        public final ImageView mStar3;
         public final ImageView itemRestoOverview;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_resto_name);
-            mContentView = (TextView) view.findViewById(R.id.item_resto_address);
+            mName = (TextView) view.findViewById(R.id.item_resto_name);
+            mAddress = (TextView) view.findViewById(R.id.item_resto_address);
+            mOpeningHours = (TextView) view.findViewById(R.id.item_resto_openinghours);
+            mDistance = (TextView) view.findViewById(R.id.item_resto_distance);
+            mWorkmatesNumber = (TextView) view.findViewById(R.id.item_resto_workmates);
+            mStar1 = (ImageView) view.findViewById(R.id.item_resto_star1);
+            mStar2 = (ImageView) view.findViewById(R.id.item_resto_star2);
+            mStar3 = (ImageView) view.findViewById(R.id.item_resto_star3);
             itemRestoOverview = (ImageView) view.findViewById(R.id.item_resto_overview);
-
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mName.getText() + "'";
         }
-    }
-
-    public void getBitmapFromMetadata(PhotoMetadata photoMetadata, final ViewHolder holder){
-        // Create a FetchPhotoRequest.
-
-        final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                //.setMaxWidth(300) // Optional.
-                //.setMaxHeight(300) // Optional.
-                .build();
-        BaseFragment.mPlacesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-            bitmap =  fetchPhotoResponse.getBitmap();
-            holder.itemRestoOverview.setImageBitmap(bitmap);
-            Log.i("--fetch bitmap--", " "+bitmap);
-
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                final ApiException apiException = (ApiException) exception;
-                Log.e("--fetch", "Place not found: " + exception.getMessage());
-                final int statusCode = apiException.getStatusCode();
-                // TODO: Handle error with given status code.
-            }
-        });
     }
 }

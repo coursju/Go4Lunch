@@ -1,52 +1,51 @@
 package com.coursju.go4lunch.base;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.controler.MainActivity;
 import com.coursju.go4lunch.modele.Restaurant;
-import com.coursju.go4lunch.utils.RestaurantsListBuilder;
+import com.coursju.go4lunch.utils.Callback;
+import com.coursju.go4lunch.utils.RestaurantListBuilder;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class BaseFragment extends Fragment {
 
     private static final String TAG = "--test_BaseFragment--";
     protected FusedLocationProviderClient mFusedLocationProviderClient;
-    protected static LatLng currentPosition;
+    public static LatLng currentPosition;
+    public static Location currentLocation;
+    public static String radius = "200";
     protected Location mLastKnownLocation;
     public static PlacesClient mPlacesClient;
     protected final LatLng mDefaultLocation = new LatLng(-21.052633331, 55.2267300518);
 
     protected static List<String> restaurantsIDListBase ;//= new ArrayList<>();
     protected static List<String> restaurantsIDList;// = new ArrayList<>();
+
     protected static List<Restaurant> restaurantsListBase = new ArrayList<>();
     protected static List<Restaurant> restaurantsList = new ArrayList<>();
 
@@ -54,16 +53,15 @@ public class BaseFragment extends Fragment {
     protected static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     protected static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     protected Boolean mLocationPermissionGranted = false;
-    protected RestaurantsListBuilder mRestaurantsListBuilder = new RestaurantsListBuilder();
+
+    protected RestaurantListBuilder mRestaurantListBuilder;
+    protected Callback callback;
 
     public static double BOUNDS = 0.02;
 
     protected MainActivity mMainActivity;
 
-    protected void showRestaurants(List<String> restoList){}
-//    protected void updateRestaurantsIDList(List idList){}
-
-
+    protected void showRestaurants(List<Restaurant> restoList){}
 
         //TODO find a solution for apiKey
     protected String apiKey = "AIzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk";//getActivity().getResources().getString(R.string.google_key);
@@ -74,8 +72,10 @@ public class BaseFragment extends Fragment {
 
         placesInitialisation();
         configureInputSearch();
-    }
+        configureCallback();
+        mRestaurantListBuilder = new RestaurantListBuilder(getContext(),callback);
 
+    }
 
     private void placesInitialisation(){
         Places.initialize(getContext(), apiKey);
@@ -102,23 +102,25 @@ public class BaseFragment extends Fragment {
         });
     }
 
-    protected void addToRestaurantsIDList(List<String> restaurantsID){
-        restaurantsIDList = new ArrayList<>();//.clear();
-        restaurantsIDList.addAll(restaurantsID);
-
-        restaurantsIDListBase = new ArrayList<>();//.clear();
-        restaurantsIDListBase.addAll(restaurantsID);
+    private void configureCallback(){
+        callback = new Callback() {
+            @Override
+            public void onFinish(List<Restaurant> restaurantList) {
+                addToRestaurantsList(restaurantList);
+                showRestaurants(restaurantList);
+                mMainActivity.getProgressBar().setVisibility(View.GONE);
+                mMainActivity.getBottomNavigationView().setVisibility(View.VISIBLE);
+            }
+        };
     }
 
-    protected void addToRestaurantsList(List<Restaurant> restaurantsList){
+    protected void addToRestaurantsList(List<Restaurant> mList){
         restaurantsList.clear();
-        restaurantsList.addAll(restaurantsList);
+        restaurantsList.addAll(mList);
 
         restaurantsListBase.clear();
-        restaurantsListBase.addAll(restaurantsList);
+        restaurantsListBase.addAll(mList);
     }
-
-
 
     public void searchByFilteringRestaurants(String query){
         // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
@@ -170,7 +172,7 @@ public class BaseFragment extends Fragment {
     protected void updateRestaurantsIDList(List idList){
         restaurantsIDList.clear();
         restaurantsIDList.addAll(idList);
-        showRestaurants(restaurantsIDList);
+        //showRestaurants(restaurantsIDList);
     }
 
 
