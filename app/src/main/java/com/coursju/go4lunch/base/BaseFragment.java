@@ -43,10 +43,6 @@ public class BaseFragment extends Fragment {
     public static PlacesClient mPlacesClient;
     protected final LatLng mDefaultLocation = new LatLng(-21.052633331, 55.2267300518);
 
-    protected static List<String> restaurantsIDListBase ;//= new ArrayList<>();
-    protected static List<String> restaurantsIDList;// = new ArrayList<>();
-
-    protected static List<Restaurant> restaurantsListBase = new ArrayList<>();
     protected static List<Restaurant> restaurantsList = new ArrayList<>();
 
     protected static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -117,62 +113,22 @@ public class BaseFragment extends Fragment {
     protected void addToRestaurantsList(List<Restaurant> mList){
         restaurantsList.clear();
         restaurantsList.addAll(mList);
-
-        restaurantsListBase.clear();
-        restaurantsListBase.addAll(mList);
     }
 
     public void searchByFilteringRestaurants(String query){
-        // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
-        // and once again when the user makes a selection (for example when calling fetchPlace()).
-        //AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-        List<String> idList = new ArrayList<>();
-        // Create a RectangularBounds object.
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng(currentPosition.latitude - BOUNDS, currentPosition.longitude - BOUNDS),
-                new LatLng(currentPosition.latitude + BOUNDS, currentPosition.longitude + BOUNDS));
+        List<Restaurant> filteredRestaurantsList = new ArrayList();
+        String toUpperQuery = query.toUpperCase();
 
-        // Use the builder to create a FindAutocompletePredictionsRequest.
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                //.setLocationBias(bounds)
-                .setLocationRestriction(bounds)
-                .setOrigin(currentPosition)
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                .setQuery(query)
-                .build();
-
-        if (query.equals("")){
-            updateRestaurantsIDList(restaurantsIDListBase);
-            //updateRestaurantsList(restaurantsListBase);
-
-        }else {
-            mPlacesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-                for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                    if (prediction.getPlaceTypes().contains(Place.Type.RESTAURANT)) {
-                        Log.i(TAG, prediction.getPlaceId());
-                        Log.i(TAG, prediction.getPrimaryText(null).toString());
-                        idList.add(prediction.getPlaceId());
-                        //updateRestaurantsIDList(idList);
-
-                    }
+            for (Restaurant restaurant: restaurantsList){
+                if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
+                    filteredRestaurantsList.add(restaurant);
                 }
-                updateRestaurantsIDList(idList);
-                //updateRestaurantsList(mRestaurantsListBuilder.restaurantsListBuilder(idList));
-
-
-            }).addOnFailureListener((exception) -> {
-                if (exception instanceof ApiException) {
-                    ApiException apiException = (ApiException) exception;
-                    Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                }
-            });
-        }
+            }
+            updateRestaurantsList(filteredRestaurantsList);
     }
 
-    protected void updateRestaurantsIDList(List idList){
-        restaurantsIDList.clear();
-        restaurantsIDList.addAll(idList);
-        //showRestaurants(restaurantsIDList);
+    protected void updateRestaurantsList(List<Restaurant> filteredRestoList){
+        showRestaurants(filteredRestoList);
     }
 
 
