@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@color/white"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:itemIconTint="@drawable/bottom_navigation_colors"
                 app:itemTextColor="@drawable/bottom_navigation_colors"
                 app:layout_constraintBottom_toBottomOf="parent"

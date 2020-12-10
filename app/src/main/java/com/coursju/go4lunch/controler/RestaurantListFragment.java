@@ -59,7 +59,7 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void showRestaurants(List<Restaurant> restoList){
-        recyclerView.setAdapter(new MyRestaurantListRecyclerViewAdapter(restoList));
+        recyclerView.setAdapter(new MyRestaurantListRecyclerViewAdapter(restoList, getContext()));
     }
 
 }

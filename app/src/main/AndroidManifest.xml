@@ -24,16 +24,24 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".authentification.AuthentificationActivity">
+        <activity android:name=".controler.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controler.MainActivity">
 
-        </activity>
+        <activity android:name=".authentification.AuthentificationActivity"
+            android:parentActivityName=".controler.MainActivity"/>
+
+        <activity android:name=".controler.SettingActivity"
+            android:parentActivityName=".controler.MainActivity"
+            android:theme="@style/Theme.Go4Lunch_actionbar"/>
+
+        <activity android:name=".controler.DetailsActivity"
+            android:parentActivityName=".controler.MainActivity"/>
+
     </application>
 
 </manifest>

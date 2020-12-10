@@ -1,6 +1,7 @@
 package com.coursju.go4lunch.base;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,6 +11,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.coursju.go4lunch.R;
+import com.coursju.go4lunch.authentification.AuthentificationActivity;
+import com.coursju.go4lunch.controler.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,12 +31,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract int getFragmentLayout();
 
-//    protected void configureToolbar(){
-//        ActionBar ab = getSupportActionBar();
-//        ab.setDisplayHomeAsUpEnabled(true);
-//    }
-
-
     @Nullable
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
 
@@ -46,5 +43,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error), Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    protected void launchAthentification(){
+        Intent intent = new Intent(this, AuthentificationActivity.class);
+        startActivity(intent);
     }
 }

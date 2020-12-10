@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
@@ -18,8 +19,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,20 +36,28 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseActivity;
 import com.coursju.go4lunch.base.BaseFragment;
+import com.coursju.go4lunch.utils.Constants;
+import com.coursju.go4lunch.utils.SignOutOrDeleteUser;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "--MainActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
@@ -62,6 +73,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
+    private MapsFragment mMapsFragment;
+    private RestaurantListFragment mRestaurantListFragment;
+    private WorkmatesListFragment mWorkmatesListFragment;
+
+    private SignOutOrDeleteUser mSignOutOrDeleteUser;
+    private static final int SIGN_OUT_TASK = 10;
+
+
     @Override
     public int getFragmentLayout() {
         return R.layout.activity_main;
@@ -70,17 +89,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.configureMainToolbar();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
-        this.configureBottomView();
-        this.launchFirstFragment();
+        if (!isCurrentUserLogged()){
+            launchAthentification();
+        }else {
+            this.configureMainToolbar();
+            this.configureFragments();
+            this.configureDrawerLayout();
+            this.configureDrawerHeader();
+            this.configureNavigationView();
+            this.configureBottomView();
+            this.launchFirstFragment();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //return super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_toolbar_menu, menu);
         return true;
@@ -102,22 +125,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         switch (id){
             case R.id.activity_main_drawer_yourlunch :
+                if (Constants.CURRENT_WORKMATE.getYourLunch().getID() == null){
+                    Toast.makeText(getApplicationContext(),R.string.select_a_lunch_place,Toast.LENGTH_LONG).show();
+                }else{
+                    Constants.DETAILS_RESTAURANT = Constants.CURRENT_WORKMATE.getYourLunch();
+                    Intent intent = new Intent(this, DetailsActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.activity_main_drawer_settings:
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
                 break;
             case R.id.activity_main_drawer_logout:
+                new SignOutOrDeleteUser(getApplicationContext(),this).signOutUserFromFirebase();
                 break;
             default:
                 break;
         }
-
         this.drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
@@ -125,13 +155,36 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void configureMainToolbar(){
         setSupportActionBar(toolbar);
         setTitle(R.string.hungry);
+    }
 
+    private void configureFragments(){
+        mMapsFragment = new MapsFragment();
+        mRestaurantListFragment = new RestaurantListFragment();
+        mWorkmatesListFragment = new WorkmatesListFragment();
     }
 
     private void configureDrawerLayout(){
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    private void configureDrawerHeader(){
+        View header = navigationView.getHeaderView(0);
+        if (isCurrentUserLogged()) {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            TextView userName = header.findViewById(R.id.drawer_user_name);
+            userName.setText(currentUser.getDisplayName());
+            TextView userEmail = header.findViewById(R.id.drawer_user_email);
+            userEmail.setText(currentUser.getEmail());
+            ImageView userImage = header.findViewById(R.id.drawer_user_image);
+            if (currentUser.getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load(this.getCurrentUser().getPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(userImage);
+            }
+        }
     }
 
     private void configureNavigationView(){
@@ -168,7 +221,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Boolean updateMainFragment(Integer integer){
         switch (integer) {
             case R.id.action_map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit(); //.addToBackStack(null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_listview:
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new RestaurantListFragment()).commit(); //.addToBackStack(null)
@@ -184,7 +237,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void launchFirstFragment(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new MapsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit();
     }
 
     public EditText getInputSearch(){return this.inputSearch;}

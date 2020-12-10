@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
@@ -14,6 +15,7 @@ import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.api.WorkmateHelper;
 import com.coursju.go4lunch.base.BaseActivity;
 import com.coursju.go4lunch.controler.MainActivity;
+import com.coursju.go4lunch.modele.Restaurant;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -36,6 +38,11 @@ public class AuthentificationActivity extends BaseActivity {
     Button buttonFacebookLogin;
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public int getFragmentLayout() {
         return R.layout.activity_authentification;
     }
@@ -43,31 +50,16 @@ public class AuthentificationActivity extends BaseActivity {
     @OnClick(R.id.email_login_button)
     public void onClickLoginEmailButton() {
         this.startEmailSignInActivity();
-        if (this.isCurrentUserLogged()){
-            this.startMainActivity();
-        } else {
-            this.startEmailSignInActivity();
-        }
     }
 
     @OnClick(R.id.google_login_button)
     public void onClickLoginGoogleButton() {
         this.startGoogleSignInActivity();
-        if (this.isCurrentUserLogged()){
-            this.startMainActivity();
-        } else {
-            this.startGoogleSignInActivity();
-        }
     }
 
     @OnClick(R.id.facebook_login_button)
     public void onClickLoginFacebookButton() {
         this.startFacebookSignInActivity();
-        if (this.isCurrentUserLogged()){
-            this.startMainActivity();
-        } else {
-            this.startFacebookSignInActivity();
-        }
     }
 
     private void startGoogleSignInActivity(){
@@ -119,9 +111,10 @@ public class AuthentificationActivity extends BaseActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 Log.d("authentification: ",getString(R.string.connection_succeed));
+                this.createUserInFirestore();//!!!!!!!!!!!!!!!!!!!!!!!!!!! !!!! put in first IF !!!!
+                onceLogged();
             } else {
                 if (response == null) {
-                    this.createUserInFirestore();
                     Log.d("authentification",getString(R.string.error_authentication_canceled));
                     Toast.makeText(getApplicationContext(),getString(R.string.error_authentication_canceled),Toast.LENGTH_SHORT).show();
                 } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
@@ -138,9 +131,7 @@ public class AuthentificationActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (this.isCurrentUserLogged()){
-            this.startMainActivity();
-        }
+        onceLogged();
     }
 
     private void startMainActivity(){
@@ -153,10 +144,17 @@ public class AuthentificationActivity extends BaseActivity {
         if (this.getCurrentUser() != null){
 
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
-            String username = this.getCurrentUser().getDisplayName();
+            String userName = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
+            String userEmail = this.getCurrentUser().getEmail();
 
-            WorkmateHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
+            WorkmateHelper.createUser(uid, urlPicture, userName, userEmail, new Restaurant()).addOnFailureListener(this.onFailureListener());
+        }
+    }
+
+    private void onceLogged(){
+        if (this.isCurrentUserLogged()){
+            this.startMainActivity();
         }
     }
 }

@@ -3,6 +3,7 @@ package com.coursju.go4lunch.modele;
 import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +14,23 @@ public class Restaurant {
     private String mAddress = null;
     private String mKindOfFood = null;
     private String mRestaurantPhotoReference = null;
-    private List<Workmate> expectedWorkmates = null;
+    @Exclude
+//    private List<Workmate> expectedWorkmates = null;
     private String mWebsite = null;
     private String mPhoneNumbers = null;
     private Integer mLikeRate = null;
     private String mID = null;
+    @Exclude
     private LatLng mLatLng = null;
+    @Exclude
     private List<String> mOpeningHours = null;
     private Boolean mIsOpen = null;
     private String mDistance = null;
+    @Exclude
     private Bitmap mBitmap = null;
+
+    public Restaurant() {
+    }
 
     public Restaurant(String name, String address, String restaurantPhotoReference, String website,
                       String phoneNumbers, String ID, LatLng latLng, String distance, List<String> openingHours,
@@ -37,7 +45,7 @@ public class Restaurant {
         mDistance = distance;
         mOpeningHours = openingHours;
         mIsOpen = isOpen;
-        expectedWorkmates = new ArrayList<>();
+//        expectedWorkmates = new ArrayList<>();
     }
 
     public String getRestaurantPhotoReference() {
@@ -96,7 +104,59 @@ public class Restaurant {
         return mDistance;
     }
 
-    public List<Workmate> getExpectedWorkmates(){return expectedWorkmates;}
+//    public List<Workmate> getExpectedWorkmates(){return expectedWorkmates;}
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public void setAddress(String address) {
+        mAddress = address;
+    }
+
+    public void setKindOfFood(String kindOfFood) {
+        mKindOfFood = kindOfFood;
+    }
+
+    public void setRestaurantPhotoReference(String restaurantPhotoReference) {
+        mRestaurantPhotoReference = restaurantPhotoReference;
+    }
+
+//    public void setExpectedWorkmates(List<Workmate> expectedWorkmates) {
+//        this.expectedWorkmates = expectedWorkmates;
+//    }
+
+    public void setWebsite(String website) {
+        mWebsite = website;
+    }
+
+    public void setPhoneNumbers(String phoneNumbers) {
+        mPhoneNumbers = phoneNumbers;
+    }
+
+    public void setLikeRate(Integer likeRate) {
+        mLikeRate = likeRate;
+    }
+
+    public void setID(String ID) {
+        mID = ID;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        mLatLng = latLng;
+    }
+
+    public void setOpeningHours(List<String> openingHours) {
+        mOpeningHours = openingHours;
+    }
+
+    public void setOpen(Boolean open) {
+        mIsOpen = open;
+    }
+
+    public void setDistance(String distance) {
+        mDistance = distance;
+    }
 
     @Override
     public String toString(){

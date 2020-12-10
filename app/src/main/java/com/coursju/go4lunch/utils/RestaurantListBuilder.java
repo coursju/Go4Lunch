@@ -236,4 +236,5 @@ public class RestaurantListBuilder {
                 });
         queue.add(imageRequest);
     }
+
 }

@@ -3,7 +3,8 @@ package com.coursju.go4lunch.adapter;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Bitmap;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,24 +14,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coursju.go4lunch.R;
-import com.coursju.go4lunch.base.BaseFragment;
+import com.coursju.go4lunch.controler.DetailsActivity;
 import com.coursju.go4lunch.modele.Restaurant;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.coursju.go4lunch.utils.Constants;
 
-import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 
-public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<MyRestaurantListRecyclerViewAdapter.ViewHolder> {
+public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<MyRestaurantListRecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "RestaurantListRecycler";
     private final List<Restaurant> mValues;
+    private  Context mContext;
 
-    public MyRestaurantListRecyclerViewAdapter(List<Restaurant> items) {
+    public MyRestaurantListRecyclerViewAdapter(List<Restaurant> items , Context context) {
         mValues = items;
+        mContext = context;
     }
 
     @Override
@@ -43,13 +41,14 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         holder.mName.setText(mValues.get(position).getName());
         holder.mAddress.setText(mValues.get(position).getAddress());
         holder.mDistance.setText(mValues.get(position).getDistance()+" m");
         holder.mWorkmatesNumber.setText("(2)");//mValues.get(position).getExpectedWorkmates().size());
         holder.itemRestoOverview.setImageBitmap(mValues.get(position).getBitmap());
 
-        int day = LocalDate.now().getDayOfWeek().getValue();//.getDisplayName(TextStyle.NARROW_STANDALONE, Locale.ENGLISH);
+//        int day = LocalDate.now().getDayOfWeek().getValue();//.getDisplayName(TextStyle.NARROW_STANDALONE, Locale.ENGLISH);
 //        if (mValues.get(position).getOpeningHours() != null){
 //            Log.i(TAG,mValues.get(position).getOpeningHours().get(day)+" name: "+mValues.get(position).getName());
 //
@@ -63,7 +62,8 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder
+                              implements View.OnClickListener{
         public final TextView mName;
         public final TextView mAddress;
         public final TextView mOpeningHours;
@@ -76,6 +76,7 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
 
         public ViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             mName = (TextView) view.findViewById(R.id.item_resto_name);
             mAddress = (TextView) view.findViewById(R.id.item_resto_address);
             mOpeningHours = (TextView) view.findViewById(R.id.item_resto_openinghours);
@@ -90,6 +91,16 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         @Override
         public String toString() {
             return super.toString() + " '" + mName.getText() + "'";
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.i(TAG,"item clicked!");
+            int mPosition = getLayoutPosition();
+            Constants.DETAILS_RESTAURANT = mValues.get(mPosition);
+            Intent intent = new Intent(mContext, DetailsActivity.class);
+            mContext.startActivity(intent);
+
         }
     }
 }

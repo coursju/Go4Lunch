@@ -34,7 +34,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class BaseFragment extends Fragment {
 
-    private static final String TAG = "--test_BaseFragment--";
+    private static final String TAG = "--BaseFragment--";
     protected FusedLocationProviderClient mFusedLocationProviderClient;
     public static LatLng currentPosition;
     public static Location currentLocation;
@@ -65,12 +65,12 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.i(TAG,"onCreate");
         placesInitialisation();
         configureInputSearch();
         configureCallback();
         mRestaurantListBuilder = new RestaurantListBuilder(getContext(),callback);
-
+        mMainActivity = (MainActivity) getActivity();
     }
 
     private void placesInitialisation(){
@@ -79,23 +79,24 @@ public class BaseFragment extends Fragment {
     }
 
     private void configureInputSearch(){
-        mMainActivity = (MainActivity)getActivity();
-        mMainActivity.getInputSearch().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if (mMainActivity != null) {
+            mMainActivity.getInputSearch().addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                searchByFilteringRestaurants(s.toString());
-            }
-        });
+                @Override
+                public void afterTextChanged(Editable s) {
+                    searchByFilteringRestaurants(s.toString());
+                }
+            });
+        }
     }
 
     private void configureCallback(){
@@ -104,8 +105,10 @@ public class BaseFragment extends Fragment {
             public void onFinish(List<Restaurant> restaurantList) {
                 addToRestaurantsList(restaurantList);
                 showRestaurants(restaurantList);
-                mMainActivity.getProgressBar().setVisibility(View.GONE);
-                mMainActivity.getBottomNavigationView().setVisibility(View.VISIBLE);
+                if (mMainActivity != null) {
+                    mMainActivity.getProgressBar().setVisibility(View.GONE);
+                    mMainActivity.getBottomNavigationView().setVisibility(View.VISIBLE);
+                }
             }
         };
     }
