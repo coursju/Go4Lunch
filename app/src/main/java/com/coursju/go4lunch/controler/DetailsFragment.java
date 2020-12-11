@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.coursju.go4lunch.R;
+import com.coursju.go4lunch.api.ExpectedHelper;
 import com.coursju.go4lunch.api.WorkmateHelper;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
@@ -100,9 +101,24 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!Constants.DETAILS_RESTAURANT.getID().equals(Constants.CURRENT_WORKMATE.getYourLunch().getID())) {
+
+                    if (Constants.CURRENT_WORKMATE.getYourLunch().getName() != null) {
+                        ExpectedHelper.deleteExpected(
+                                Constants.CURRENT_WORKMATE.getUid(),
+                                Constants.CURRENT_WORKMATE.getYourLunch().getName());
+                    }
                     WorkmateHelper.updateRestaurant(Constants.DETAILS_RESTAURANT);
                     detailsFloatingButton.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorGreen)));
+
+                    ExpectedHelper.createExpected(
+                            Constants.CURRENT_WORKMATE.getUid(),
+                            Constants.DETAILS_RESTAURANT.getName(),
+                            Constants.CURRENT_WORKMATE.getWorkmateName(),
+                            Constants.CURRENT_WORKMATE.getWorkmatePicture());
                 }else{
+                    ExpectedHelper.deleteExpected(
+                            Constants.CURRENT_WORKMATE.getUid(),
+                            Constants.CURRENT_WORKMATE.getYourLunch().getName());
                     WorkmateHelper.updateRestaurant(new Restaurant());
                     detailsFloatingButton.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
                 }

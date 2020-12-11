@@ -57,7 +57,7 @@ public class RestaurantListBuilder {
         String url ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
                 BaseFragment.currentLocation.getLatitude()+","+BaseFragment.currentLocation.getLongitude() +
                 "&radius=" +
-                BaseFragment.radius +
+                Constants.radius +
                 "&types=restaurant&sensor=true" +
                 "&key=A" +
                 "IzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk";

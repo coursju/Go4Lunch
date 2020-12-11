@@ -44,8 +44,19 @@
     <string name="searchbar_hint">Enter a restaurant name</string>
 
     <!--    WORKMATE LIST-->
+    <string name="you_are_eating">You are eating at</string>
+    <string name="you_havent_decided">You haven\' t decided yet</string>
     <string name="is_eating">is eating at</string>
     <string name="hasnt_decided">hasn\' t decided yet</string>
+
+    <!--    SETTING-->
+    <string name="title">Setting</string>
+    <string name="change_name">Change name</string>
+    <string name="delete_account">Delete account</string>
+    <string name="change_email">Change email</string>
+    <string name="change_password">Change password</string>
+    <string name="change_radius">Change radius</string>
+
 
 
 

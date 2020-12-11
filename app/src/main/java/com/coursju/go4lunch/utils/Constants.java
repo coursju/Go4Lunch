@@ -11,4 +11,5 @@ import com.google.firebase.auth.FirebaseUser;
     public static Workmate CURRENT_WORKMATE = new Workmate();
     public static Restaurant DETAILS_RESTAURANT = null;
 
+     public static String radius = "200";
  }

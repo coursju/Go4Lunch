@@ -14,43 +14,24 @@ import android.view.ViewGroup;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.adapter.MyExpectedRecyclerViewAdapter;
+import com.coursju.go4lunch.api.ExpectedHelper;
 import com.coursju.go4lunch.controler.dummy.DummyContent;
+import com.coursju.go4lunch.modele.Expected;
+import com.coursju.go4lunch.utils.Constants;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * A fragment representing a list of Items.
  */
 public class ExpectedFragment extends Fragment {
-
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ExpectedFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static ExpectedFragment newInstance(int columnCount) {
-        ExpectedFragment fragment = new ExpectedFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,12 +42,22 @@ public class ExpectedFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyExpectedRecyclerViewAdapter(DummyContent.ITEMS));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            CollectionReference ref = ExpectedHelper.getExpectedRestaurant(Constants.DETAILS_RESTAURANT.getName());
+
+            ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<Expected> expectedList = queryDocumentSnapshots.toObjects(Expected.class);
+                    List<Expected> expectedListCopy = new ArrayList<>(expectedList);
+                    for (Expected expected: expectedListCopy){
+                        if (expected.getUid().equals(Constants.CURRENT_WORKMATE.getUid())){
+                            expectedList.remove(expected);
+                        }
+                    }
+                    recyclerView.setAdapter(new MyExpectedRecyclerViewAdapter(expectedList, getActivity()));
+                }
+            });
         }
         return view;
     }

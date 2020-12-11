@@ -38,7 +38,6 @@ public class BaseFragment extends Fragment {
     protected FusedLocationProviderClient mFusedLocationProviderClient;
     public static LatLng currentPosition;
     public static Location currentLocation;
-    public static String radius = "200";
     protected Location mLastKnownLocation;
     public static PlacesClient mPlacesClient;
     protected final LatLng mDefaultLocation = new LatLng(-21.052633331, 55.2267300518);

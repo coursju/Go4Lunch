@@ -2,13 +2,20 @@ package com.coursju.go4lunch.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.provider.SyncStateContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.controler.dummy.DummyContent.DummyItem;
+import com.coursju.go4lunch.modele.Expected;
+import com.coursju.go4lunch.utils.Constants;
 
 import java.util.List;
 
@@ -18,10 +25,12 @@ import java.util.List;
  */
 public class MyExpectedRecyclerViewAdapter extends RecyclerView.Adapter<MyExpectedRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Expected> mValues;
+    private final Activity mActivity;
 
-    public MyExpectedRecyclerViewAdapter(List<DummyItem> items) {
+    public MyExpectedRecyclerViewAdapter(List<Expected> items, Activity activity) {
         mValues = items;
+        mActivity = activity;
     }
 
     @Override
@@ -33,9 +42,14 @@ public class MyExpectedRecyclerViewAdapter extends RecyclerView.Adapter<MyExpect
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+            holder.mTextView.setText(mValues.get(position).getWorkmateName());
+
+            if (mValues.get(position).getWorkmatePicture() != null) {
+                Glide.with(mActivity)
+                        .load(mValues.get(position).getWorkmatePicture())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.mImageView);
+            }
     }
 
     @Override
@@ -44,21 +58,18 @@ public class MyExpectedRecyclerViewAdapter extends RecyclerView.Adapter<MyExpect
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mTextView;
+        public final ImageView mImageView;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mTextView = (TextView) view.findViewById(R.id.expected_text);
+            mImageView = (ImageView) view.findViewById(R.id.expected_image);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString();
         }
     }
 }
