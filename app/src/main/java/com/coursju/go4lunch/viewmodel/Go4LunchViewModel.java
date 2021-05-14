@@ -1,25 +1,25 @@
 package com.coursju.go4lunch.viewmodel;
 
-import android.view.MenuItem;
-
 import androidx.lifecycle.ViewModel;
 
 import com.coursju.go4lunch.controler.MapsFragment;
 import com.coursju.go4lunch.controler.RestaurantListFragment;
 import com.coursju.go4lunch.controler.WorkmatesListFragment;
 import com.coursju.go4lunch.modele.Restaurant;
+import com.coursju.go4lunch.modele.Workmate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Go4LunchViewModel extends ViewModel {
 
-    private MapsFragment mMapsFragment;
-    private RestaurantListFragment mRestaurantListFragment;
-    private WorkmatesListFragment mWorkmatesListFragment;
+    private MapsFragment mMapsFragment = new MapsFragment();
+    private RestaurantListFragment mRestaurantListFragment = new RestaurantListFragment();
+    private WorkmatesListFragment mWorkmatesListFragment = new WorkmatesListFragment();
     private Integer bottomNavItem = 0;
     private Boolean searchZoneVisible = false;
     private List<Restaurant> restaurantsList = new ArrayList<>();
+    private List<Workmate> workmateList = new ArrayList<>();
 
     public MapsFragment getmMapsFragment() {
         return mMapsFragment;
@@ -67,6 +67,14 @@ public class Go4LunchViewModel extends ViewModel {
 
     public void setRestaurantsList(List<Restaurant> restaurantsList) {
         this.restaurantsList = restaurantsList;
+    }
+
+    public List<Workmate> getWorkmateList() {
+        return workmateList;
+    }
+
+    public void setWorkmateList(List<Workmate> workmateList) {
+        this.workmateList = workmateList;
     }
 }
 

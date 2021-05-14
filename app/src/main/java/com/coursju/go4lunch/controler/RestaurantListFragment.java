@@ -1,27 +1,19 @@
 package com.coursju.go4lunch.controler;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.adapter.MyRestaurantListRecyclerViewAdapter;
 import com.coursju.go4lunch.base.BaseFragment;
 import com.coursju.go4lunch.modele.Restaurant;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantListFragment extends BaseFragment {
@@ -50,7 +42,7 @@ public class RestaurantListFragment extends BaseFragment {
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            if (restaurantsList != null) showRestaurants(restaurantsList);
+            if (go4LunchViewModel.getRestaurantsList() != null) showRestaurants(go4LunchViewModel.getRestaurantsList());
 
         }
         return view;
@@ -58,7 +50,7 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void showRestaurants(List<Restaurant> restoList){
-        recyclerView.setAdapter(new MyRestaurantListRecyclerViewAdapter(restoList, getContext()));
+        recyclerView.setAdapter(new MyRestaurantListRecyclerViewAdapter(restoList, getContext(), go4LunchViewModel.getWorkmateList()));
     }
 
 }

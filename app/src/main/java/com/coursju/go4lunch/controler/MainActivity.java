@@ -64,7 +64,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             launchAuthentification();
         }else {
             this.configureMainToolbar();
-            this.configureFragments();
             this.configureDrawerLayout();
             this.configureDrawerHeader();
             this.configureNavigationView();
@@ -123,18 +122,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void configureMainToolbar(){
         setSupportActionBar(toolbar);
         setTitle(R.string.hungry);
-    }
-
-    private void configureFragments(){
-        if (go4LunchViewModel.getmMapsFragment() == null) {
-            go4LunchViewModel.setmMapsFragment(new MapsFragment());
-        }
-        if (go4LunchViewModel.getmRestaurantListFragment() == null) {
-            go4LunchViewModel.setmRestaurantListFragment(new RestaurantListFragment());
-        }
-        if (go4LunchViewModel.getmWorkmatesListFragment() == null) {
-            go4LunchViewModel.setmWorkmatesListFragment(new WorkmatesListFragment());
-        }
     }
 
     private void configureDrawerLayout(){

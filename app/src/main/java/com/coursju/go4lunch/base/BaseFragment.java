@@ -11,12 +11,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.coursju.go4lunch.adapter.MyWorkmatesListRecyclerViewAdapter;
+import com.coursju.go4lunch.api.WorkmateHelper;
 import com.coursju.go4lunch.controler.MainActivity;
 import com.coursju.go4lunch.modele.Restaurant;
+import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.PlaceRestaurantsCallback;
 import com.coursju.go4lunch.utils.RestaurantListBuilder;
 import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,22 +30,12 @@ public class BaseFragment extends Fragment {
     private static final String TAG = "BaseFragment--";
 
     protected Go4LunchViewModel go4LunchViewModel;
-
     protected FusedLocationProviderClient mFusedLocationProviderClient;
-//    public static LatLng currentPosition;
-    public static Location currentLocation;
-//    protected Location mLastKnownLocation;
-//    public PlacesClient mPlacesClient;
-
-    protected static List<Restaurant> restaurantsList = new ArrayList<>();
-
-    protected static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     protected Boolean mLocationPermissionGranted = false;
     protected Boolean isFiltered = false;
     protected RestaurantListBuilder mRestaurantListBuilder;
     protected PlaceRestaurantsCallback placeRestaurantsCallback;
 
-    public static double BOUNDS = 0.02;
 
     protected MainActivity mMainActivity;
 
@@ -51,17 +46,15 @@ public class BaseFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-
         configureViewModel();
-//        placesInitialisation();
         configureCallback();
         mRestaurantListBuilder = new RestaurantListBuilder(getContext(), placeRestaurantsCallback);
     }
 
     @Override
     public void onResume() {
+        getFirebaseWorkmateList();
         configureInputSearch();
         super.onResume();
     }
@@ -69,11 +62,6 @@ public class BaseFragment extends Fragment {
     protected void configureViewModel(){
         go4LunchViewModel = new ViewModelProvider(requireActivity()).get(Go4LunchViewModel.class);
     }
-
-//    private void placesInitialisation(){
-//        Places.initialize(getContext(), apiKey);
-//        mPlacesClient = Places.createClient(getContext());
-//    }
 
     private void configureInputSearch(){
         mMainActivity = (MainActivity) getActivity();
@@ -92,6 +80,15 @@ public class BaseFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public void getFirebaseWorkmateList(){
+        WorkmateHelper.getUsersCollection().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                go4LunchViewModel.setWorkmateList(queryDocumentSnapshots.toObjects(Workmate.class));
+            }
+        });
     }
 
     protected void inputSearchIsEmpty(){
@@ -118,8 +115,8 @@ public class BaseFragment extends Fragment {
 
     protected void addToRestaurantsList(List<Restaurant> mList){
         go4LunchViewModel.setRestaurantsList(mList);
-        restaurantsList.clear();
-        restaurantsList.addAll(mList);
+//        restaurantsList.clear();
+//        restaurantsList.addAll(mList);
     }
 
     public void searchByFilteringRestaurants(String query){
@@ -127,11 +124,16 @@ public class BaseFragment extends Fragment {
         List<Restaurant> filteredRestaurantsList = new ArrayList();
         String toUpperQuery = query.toUpperCase();
 
-            for (Restaurant restaurant: restaurantsList){
-                if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
-                    filteredRestaurantsList.add(restaurant);
-                }
+//            for (Restaurant restaurant: restaurantsList){
+//                if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
+//                    filteredRestaurantsList.add(restaurant);
+//                }
+//            }
+        for (Restaurant restaurant: go4LunchViewModel.getRestaurantsList()){
+            if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
+                filteredRestaurantsList.add(restaurant);
             }
+        }
             updateRestaurantsList(filteredRestaurantsList);
     }
 
@@ -143,7 +145,12 @@ public class BaseFragment extends Fragment {
         List<Restaurant> filteredRestaurantsList = new ArrayList();
         String toUpperQuery = query.toUpperCase();
 
-        for (Restaurant restaurant: restaurantsList){
+//        for (Restaurant restaurant: restaurantsList){
+//            if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
+//                filteredRestaurantsList.add(restaurant);
+//            }
+//        }
+        for (Restaurant restaurant: go4LunchViewModel.getRestaurantsList()){
             if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
                 filteredRestaurantsList.add(restaurant);
             }

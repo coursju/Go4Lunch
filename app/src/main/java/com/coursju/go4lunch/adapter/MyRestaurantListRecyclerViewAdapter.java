@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.controler.DetailsActivity;
 import com.coursju.go4lunch.modele.Restaurant;
+import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
 
 import java.util.List;
@@ -24,11 +25,13 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
 
     private static final String TAG = "RestaurantListRecycler";
     private final List<Restaurant> mValues;
-    private  Context mContext;
+    private final Context mContext;
+    private List<Workmate> mWorkmateList;
 
-    public MyRestaurantListRecyclerViewAdapter(List<Restaurant> items , Context context) {
+    public MyRestaurantListRecyclerViewAdapter(List<Restaurant> items , Context context, List<Workmate> workmateList) {
         mValues = items;
         mContext = context;
+        mWorkmateList = workmateList;
     }
 
     @Override
@@ -45,7 +48,15 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         holder.mName.setText(mValues.get(position).getName());
         holder.mAddress.setText(mValues.get(position).getAddress());
         holder.mDistance.setText(mValues.get(position).getDistance()+" m");
-        holder.mWorkmatesNumber.setText("(2)");//mValues.get(position).getExpectedWorkmates().size());
+        int i = 0;
+        for (Workmate workmate : mWorkmateList){
+            if (workmate.getYourLunch().getName() != null){
+                if (workmate.getYourLunch().getName().equals(mValues.get(position).getName())){
+                    i++;
+                }
+            }
+        }
+        holder.mWorkmatesNumber.setText("("+i+")");
         holder.itemRestoOverview.setImageBitmap(mValues.get(position).getBitmap());
 
 //        int day = LocalDate.now().getDayOfWeek().getValue();//.getDisplayName(TextStyle.NARROW_STANDALONE, Locale.ENGLISH);

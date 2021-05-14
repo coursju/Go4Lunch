@@ -14,7 +14,6 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.coursju.go4lunch.R;
-import com.coursju.go4lunch.base.BaseFragment;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -57,9 +56,9 @@ public class RestaurantListBuilder {
      */
     private void getPlaceIDList(){
         String url ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
-                BaseFragment.currentLocation.getLatitude()+","+BaseFragment.currentLocation.getLongitude() +
+                Constants.CURRENT_LOCATION.getLatitude()+","+ Constants.CURRENT_LOCATION.getLongitude() +
                 "&radius=" +
-                Constants.radius +
+                Constants.RADIUS +
                 "&types=restaurant&sensor=true" +
                 "&key=A" +
                 "IzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk";
@@ -166,7 +165,7 @@ public class RestaurantListBuilder {
                             Location loc = new Location("");
                             loc.setLatitude(lat);
                             loc.setLongitude(lng);
-                            String distance =  String.valueOf((int)BaseFragment.currentLocation.distanceTo(loc));
+                            String distance =  String.valueOf((int) Constants.CURRENT_LOCATION.distanceTo(loc));
 
                             //get opening hours
                             List<String> openingHours = new ArrayList<>();

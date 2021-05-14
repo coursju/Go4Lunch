@@ -1,5 +1,6 @@
 package com.coursju.go4lunch.controler;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -34,25 +36,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
-    private String TAG = "MapFragment--";
+    private final String TAG = "MapFragment--";
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
 
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
-    private static final float DEFAULT_ZOOM = 18f;
     private FloatingActionButton mapsFloatingButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        Log.i(TAG,"onCreateView");
         getLocationPermission();
-
         updateConstantUser();
-
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
         }
@@ -70,7 +70,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         inputSearchIsEmpty();
-        Log.i(TAG, "on resume");
     }
 
     @Override
@@ -87,7 +86,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
         mapsFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                restaurantsList.clear();
+                go4LunchViewModel.setRestaurantsList(new ArrayList<>());
                 getDeviceLocation();
             }
         });
@@ -103,14 +102,14 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
-                            currentLocation = (Location) task.getResult();
-                            LatLng currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                            if (restaurantsList.isEmpty()) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, DEFAULT_ZOOM));
+                            Constants.CURRENT_LOCATION = (Location) task.getResult();
+                            LatLng currentPosition = new LatLng(Constants.CURRENT_LOCATION.getLatitude(), Constants.CURRENT_LOCATION.getLongitude());
+                            if (go4LunchViewModel.getRestaurantsList().isEmpty()) {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.DEFAULT_ZOOM));
                                 findNearbyRestaurants();
                             }else{
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, DEFAULT_ZOOM));
-                                showRestaurants(restaurantsList);
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.DEFAULT_ZOOM));
+                                showRestaurants(go4LunchViewModel.getRestaurantsList());
                             }
 
                         } else {
@@ -136,7 +135,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
                     getDeviceLocation();
-                    Log.i(TAG,"onRequestPermissionsResult");
                 }
             }
         }
@@ -144,21 +142,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     private void updateLocationUI() {
-//        if (mMap == null) {
-//            return;
-//        }
         try {
-//            if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 mapsFloatingButton.setVisibility(View.VISIBLE);
-//            } else {
-//                mMap.setMyLocationEnabled(false);
-////                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-//                mapsFloatingButton.setVisibility(View.GONE);
-////                mLastKnownLocation = null;
-//                getLocationPermission();
-//            }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
@@ -173,8 +160,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this.getActivity(),
                     new String[]{ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            Log.i(TAG,"getLocationPermission--false");
-
         }
     }
 
@@ -201,8 +186,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
             mMap.clear();
 
             for (Restaurant resto : listOfRestaurants) {
-                Log.i(TAG, "showRestaurants loop: ");
-                mMap.addMarker(new MarkerOptions().position(resto.getLatLng()).title(resto.getName()));
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(resto.getLatLng()).title(resto.getName());
+                for (Workmate workmateResto : go4LunchViewModel.getWorkmateList()){
+                    if (workmateResto.getYourLunch().getName() != null){
+                        if (workmateResto.getYourLunch().getName().equals(resto.getName())){
+                            markerOptions .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        }
+                    }
+                }
+                mMap.addMarker(markerOptions);
             }
             isFiltered = false;
         }
@@ -212,8 +205,14 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getContext(),(String)marker.getTag(),Toast.LENGTH_SHORT).show();
-                return false;
+                for (Restaurant resto : go4LunchViewModel.getRestaurantsList()){
+                    if (resto.getName().equals(marker.getTitle())){
+                        Constants.DETAILS_RESTAURANT = resto;
+                        Intent intent = new Intent(getContext(), DetailsActivity.class);
+                        startActivity(intent);
+                    }
+                }
+                return true;
             }
         });
     }

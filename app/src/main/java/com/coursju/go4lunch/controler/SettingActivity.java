@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -66,7 +65,7 @@ public class SettingActivity extends BaseActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                Constants.radius = changeRadiusText.getText().toString();
+                Constants.RADIUS = changeRadiusText.getText().toString();
                 changeRadiusButton.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorGreen)));
             }
         });

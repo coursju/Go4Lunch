@@ -90,11 +90,6 @@ public class MyWorkmatesListRecyclerViewAdapter extends RecyclerView.Adapter<MyW
         }
 
         @Override
-        public String toString() {
-            return super.toString();// + " '" + mContentView.getText() + "'";
-        }
-
-        @Override
         public void onClick(View v) {
             int mPosition = getLayoutPosition();
             if (mWorkmates.get(mPosition).getYourLunch().getID() != null){

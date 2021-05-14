@@ -1,8 +1,11 @@
 package com.coursju.go4lunch.api;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
+import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
