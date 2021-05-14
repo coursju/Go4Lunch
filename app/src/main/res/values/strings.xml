@@ -57,6 +57,9 @@
     <string name="change_password">Change password</string>
     <string name="change_radius">Change radius</string>
 
+<!--    RESTAURANTLISTBUILDER-->
+    <string name="no_near_restaurants">Enable to find restaurants in the area</string>
+
 
 
 

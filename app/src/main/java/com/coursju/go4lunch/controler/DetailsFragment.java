@@ -1,7 +1,9 @@
 package com.coursju.go4lunch.controler;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -62,7 +64,9 @@ public class DetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         linkView(view);
         updateView();
-        configureButtonListener();
+        configureFloatingButtonListener();
+        configurePhoneCallButtonListener();
+        configureWebsiteButtonListener();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -95,7 +99,7 @@ public class DetailsFragment extends Fragment {
         }
     }
 
-    private void configureButtonListener(){
+    private void configureFloatingButtonListener(){
         detailsFloatingButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -124,7 +128,32 @@ public class DetailsFragment extends Fragment {
                 }
             }
         });
+    }
 
+    private void configurePhoneCallButtonListener(){
+        detailsCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + Constants.DETAILS_RESTAURANT.getPhoneNumbers()));
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private void configureWebsiteButtonListener(){
+        detailsWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri webpage = Uri.parse(Constants.DETAILS_RESTAURANT.getWebsite());
+                Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void fetchBitmap(){

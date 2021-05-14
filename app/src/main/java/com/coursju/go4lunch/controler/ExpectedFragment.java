@@ -2,35 +2,26 @@ package com.coursju.go4lunch.controler;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.adapter.MyExpectedRecyclerViewAdapter;
 import com.coursju.go4lunch.api.ExpectedHelper;
-import com.coursju.go4lunch.controler.dummy.DummyContent;
 import com.coursju.go4lunch.modele.Expected;
 import com.coursju.go4lunch.utils.Constants;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
-/**
- * A fragment representing a list of Items.
- */
 public class ExpectedFragment extends Fragment {
 
     @Override

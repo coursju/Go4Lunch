@@ -30,17 +30,9 @@ public class AuthentificationActivity extends BaseActivity {
 
     private static final int RC_SIGN_IN = 123;
 
-    @BindView(R.id.email_login_button)
-    Button buttonEmailLogin;
-    @BindView(R.id.google_login_button)
-    Button buttonGoogleLogin;
-    @BindView(R.id.facebook_login_button)
-    Button buttonFacebookLogin;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    @BindView(R.id.email_login_button) Button buttonEmailLogin;
+    @BindView(R.id.google_login_button) Button buttonGoogleLogin;
+    @BindView(R.id.facebook_login_button) Button buttonFacebookLogin;
 
     @Override
     public int getFragmentLayout() {
@@ -105,7 +97,6 @@ public class AuthentificationActivity extends BaseActivity {
     }
 
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
-
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
         if (requestCode == RC_SIGN_IN) {

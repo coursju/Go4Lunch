@@ -1,6 +1,5 @@
 package com.coursju.go4lunch.controler;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -19,9 +18,7 @@ import com.coursju.go4lunch.api.WorkmateHelper;
 import com.coursju.go4lunch.base.BaseFragment;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
-import com.coursju.go4lunch.utils.Callback;
 import com.coursju.go4lunch.utils.Constants;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,28 +30,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
+    private String TAG = "MapFragment--";
 
     private GoogleMap mMap;
-    private SupportMapFragment mapFragment = null;
+    private SupportMapFragment mapFragment;
     private static final float DEFAULT_ZOOM = 18f;
     private FloatingActionButton mapsFloatingButton;
-    private String TAG = "--MapFragment--";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -67,7 +57,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
             mapFragment = SupportMapFragment.newInstance();
         }
         mapFragment.getMapAsync(this);
-
         return inflater.inflate(R.layout.fragment_maps, parent, false);
     }
 
@@ -78,13 +67,19 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        inputSearchIsEmpty();
+        Log.i(TAG, "on resume");
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.i(TAG,"onMapReady");
         mMap = googleMap;
         updateLocationUI();
         getDeviceLocation();
         configureMarkersListeners();
-        //mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     private void configureMapsFloatingButton(View view){
@@ -109,7 +104,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             currentLocation = (Location) task.getResult();
-                            currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            LatLng currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             if (restaurantsList.isEmpty()) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, DEFAULT_ZOOM));
                                 findNearbyRestaurants();
@@ -135,12 +130,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Log.i(TAG,"onRequestPermissionsResult--first");
-
-        mLocationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
@@ -153,22 +144,21 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     private void updateLocationUI() {
-        if (mMap == null) {
-            return;
-        }
+//        if (mMap == null) {
+//            return;
+//        }
         try {
-            if (mLocationPermissionGranted) {
+//            if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 mapsFloatingButton.setVisibility(View.VISIBLE);
-            } else {
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mapsFloatingButton.setVisibility(View.GONE);
-
-                mLastKnownLocation = null;
-                getLocationPermission();
-            }
+//            } else {
+//                mMap.setMyLocationEnabled(false);
+////                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+//                mapsFloatingButton.setVisibility(View.GONE);
+////                mLastKnownLocation = null;
+//                getLocationPermission();
+//            }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
@@ -199,11 +189,22 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
     @Override
     protected void showRestaurants(List<Restaurant> restoList){
         Log.i(TAG,"showRestaurants-: "+restoList.toString());
+        List<Restaurant> listOfRestaurants = restoList;
+        if (mMainActivity != null){
+            if (!mMainActivity.getInputSearch().getText().toString().equals("")
+            && !isFiltered){
+                listOfRestaurants = getFilteredRestaurantsList((mMainActivity.getInputSearch().getText().toString()));
+                Log.i(TAG, "filter "+String.valueOf(isFiltered));
+            }
+        }
+        if (mMap != null) {
+            mMap.clear();
 
-        mMap.clear();
-        for (Restaurant resto: restoList){
-            Log.i(TAG,"showRestaurants loop: ");
-            mMap.addMarker(new MarkerOptions().position(resto.getLatLng()).title(resto.getName()));
+            for (Restaurant resto : listOfRestaurants) {
+                Log.i(TAG, "showRestaurants loop: ");
+                mMap.addMarker(new MarkerOptions().position(resto.getLatLng()).title(resto.getName()));
+            }
+            isFiltered = false;
         }
     }
 

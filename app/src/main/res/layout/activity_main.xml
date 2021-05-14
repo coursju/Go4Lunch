@@ -23,8 +23,8 @@
 
             <RelativeLayout
                 android:id="@+id/relativ_layout_search"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_width="333dp"
+                android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
@@ -42,8 +42,8 @@
 
                 <EditText
                     android:id="@+id/input_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_width="306dp"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/ic_magnify"
                     android:background="@null"

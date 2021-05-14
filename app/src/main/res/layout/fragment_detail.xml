@@ -5,16 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/fragment3"
-        android:name="com.coursju.go4lunch.controler.ExpectedFragment"
-        android:layout_width="405dp"
-        android:layout_height="213dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/details_floatingActionButton"
         android:layout_width="wrap_content"
@@ -24,129 +14,136 @@
         android:focusable="auto"
         android:foreground="@drawable/ic_check_circle_black_48dp"
         android:foregroundTint="@color/white"
+        android:translationX="10dp"
+        android:translationY="230dp"
         app:backgroundTint="@null"
-        app:layout_constraintBottom_toTopOf="@+id/details_linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintHorizontal_bias="0.87"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_imageView"
-        app:layout_constraintVertical_bias="0.767" />
-
-    <ImageView
-        android:id="@+id/details_imageView"
-        android:layout_width="420dp"
-        android:layout_height="253dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@+id/details_linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.436"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/ic_fortests_restau" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/details_linearLayout2"
-        android:layout_width="412dp"
-        android:layout_height="105dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/fragment3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_linearLayout">
-
-        <Button
-            android:id="@+id/details_call_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_baseline_phone_24"
-            android:text="@string/details_call_button"
-            android:textColor="@color/orange_design"
-            app:backgroundTint="#FFFFFF"
-            app:iconTint="@color/orange_design"
-            app:iconTintMode="add" />
-
-        <Button
-            android:id="@+id/details_like_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_baseline_star_rate_24"
-            android:text="@string/details_like_button"
-            android:textColor="@color/orange_design"
-            app:backgroundTint="#FFFFFF" />
-
-        <Button
-            android:id="@+id/details_website_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_worldwideweb"
-            android:text="@string/details_website_button"
-            android:textColor="@color/orange_design"
-            app:backgroundTint="#FFFFFF" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/details_linearLayout"
-        android:layout_width="417dp"
-        android:layout_height="107dp"
-        android:background="@color/orange_design"
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/details_linearLayout2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_imageView"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/details_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            tools:srcCompat="@drawable/ic_fortests_restau" />
 
         <LinearLayout
-            android:layout_width="326dp"
-            android:layout_height="42dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/details_resto_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_weight="2"
-                android:gravity="center|start"
-                android:text="TextView"
-                android:textAlignment="gravity"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+            android:id="@+id/details_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@color/orange_design"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="64dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center|start"
+                android:layout_width="326dp"
+                android:layout_height="42dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/details_star_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_baseline_star_rate_24"
-                    app:tint="@color/colorAccent"
-                    tools:ignore="VectorDrawableCompat" />
+                <TextView
+                    android:id="@+id/details_resto_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="2"
+                    android:gravity="center|start"
+                    android:text="TextView"
+                    android:textAlignment="gravity"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center|start"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/details_star_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_baseline_star_rate_24"
+                        app:tint="@color/colorAccent"
+                        tools:ignore="VectorDrawableCompat" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/details_resto_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center|start"
+                android:text="test123"
+                android:textAlignment="gravity"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/details_resto_address"
+        <LinearLayout
+            android:id="@+id/details_linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:gravity="center|start"
-            android:text="test123"
-            android:textAlignment="gravity"
-            android:textColor="#FFFFFF" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/details_call_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_baseline_phone_24"
+                android:text="@string/details_call_button"
+                android:textColor="@color/orange_design"
+                app:backgroundTint="#FFFFFF"
+                app:iconTint="@color/orange_design"
+                app:iconTintMode="add" />
+
+            <Button
+                android:id="@+id/details_like_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_baseline_star_rate_24"
+                android:text="@string/details_like_button"
+                android:textColor="@color/orange_design"
+                app:backgroundTint="#FFFFFF" />
+
+            <Button
+                android:id="@+id/details_website_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_worldwideweb"
+                android:text="@string/details_website_button"
+                android:textColor="@color/orange_design"
+                app:backgroundTint="#FFFFFF" />
+        </LinearLayout>
+
+        <fragment
+            android:id="@+id/fragment3"
+            android:name="com.coursju.go4lunch.controler.ExpectedFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:visibility="visible" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,30 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/workmate_list_picture"
-        android:layout_width="92dp"
-        android:layout_height="79dp"
-        android:layout_marginStart="5dp"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/workmate_list_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_facebook" />
-
-    <TextView
-        android:id="@+id/workmate_list_text"
-        android:layout_width="317dp"
-        android:layout_height="77dp"
-        android:layout_marginStart="10dp"
-        android:gravity="center|start"
-        android:text="They are eating french(Le resto)"
-        android:textAppearance="?attr/textAppearanceListItem"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/workmate_list_picture"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/workmate_list_picture"
+            android:layout_width="92dp"
+            android:layout_height="79dp"
+            android:layout_marginStart="5dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_facebook" />
+
+        <TextView
+            android:id="@+id/workmate_list_text"
+            android:layout_width="317dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center|start"
+            android:text="They are eating french(Le resto)"
+            android:textAppearance="?attr/textAppearanceListItem" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

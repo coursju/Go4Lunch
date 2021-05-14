@@ -1,18 +1,9 @@
 package com.coursju.go4lunch.controler;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,24 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseActivity;
-import com.coursju.go4lunch.base.BaseFragment;
 import com.coursju.go4lunch.utils.Constants;
 import com.coursju.go4lunch.utils.SignOutOrDeleteUser;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,30 +38,19 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MainActivity";
 
-    private static final String TAG = "--MainActivity";
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
-    @BindView(R.id.bottom_nav)
-    BottomNavigationView bottomNavigationView;
-    @BindView(R.id.relativ_layout_search)
-    RelativeLayout relativLayoutSearch;
-    @BindView(R.id.input_search)
-    EditText inputSearch;
-    @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
-
-    private MapsFragment mMapsFragment;
-    private RestaurantListFragment mRestaurantListFragment;
-    private WorkmatesListFragment mWorkmatesListFragment;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.bottom_nav) BottomNavigationView bottomNavigationView;
+    @BindView(R.id.relativ_layout_search) RelativeLayout relativLayoutSearch;
+    @BindView(R.id.input_search) EditText inputSearch;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
     private SignOutOrDeleteUser mSignOutOrDeleteUser;
+    private Menu menu;
     private static final int SIGN_OUT_TASK = 10;
-
 
     @Override
     public int getFragmentLayout() {
@@ -90,7 +61,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!isCurrentUserLogged()){
-            launchAthentification();
+            launchAuthentification();
         }else {
             this.configureMainToolbar();
             this.configureFragments();
@@ -98,7 +69,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             this.configureDrawerHeader();
             this.configureNavigationView();
             this.configureBottomView();
-            this.launchFirstFragment();
         }
     }
 
@@ -106,8 +76,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_toolbar_menu, menu);
+        this.menu = menu;
+        this.launchFirstFragment();
         return true;
-
     }
 
     @Override
@@ -119,15 +90,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             super.onBackPressed();
         }
-
-        }
+    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id){
+        switch (item.getItemId()){
             case R.id.activity_main_drawer_yourlunch :
                 if (Constants.CURRENT_WORKMATE.getYourLunch().getID() == null){
                     Toast.makeText(getApplicationContext(),R.string.select_a_lunch_place,Toast.LENGTH_LONG).show();
@@ -158,9 +126,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void configureFragments(){
-        mMapsFragment = new MapsFragment();
-        mRestaurantListFragment = new RestaurantListFragment();
-        mWorkmatesListFragment = new WorkmatesListFragment();
+        if (go4LunchViewModel.getmMapsFragment() == null) {
+            go4LunchViewModel.setmMapsFragment(new MapsFragment());
+        }
+        if (go4LunchViewModel.getmRestaurantListFragment() == null) {
+            go4LunchViewModel.setmRestaurantListFragment(new RestaurantListFragment());
+        }
+        if (go4LunchViewModel.getmWorkmatesListFragment() == null) {
+            go4LunchViewModel.setmWorkmatesListFragment(new WorkmatesListFragment());
+        }
     }
 
     private void configureDrawerLayout(){
@@ -192,10 +166,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void configureBottomView(){
-//        bottomNavigationView.setOnNavigationItemSelectedListener(item -> updateMainFragment(item.getItemId()));
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                go4LunchViewModel.setBottomNavItem(item.getItemId());
                 return updateMainFragment(item.getItemId());
             }
         });
@@ -205,11 +179,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.app_bar_search:
-                Toast.makeText(getApplicationContext(), "search!!!", Toast.LENGTH_SHORT).show();
                 if (relativLayoutSearch.getVisibility() == View.GONE) {
                     relativLayoutSearch.setVisibility(View.VISIBLE);
+                    item.setIcon(R.drawable.ic_close_24);
+                    go4LunchViewModel.setSearchZoneVisible(true);
                 }else {
                     relativLayoutSearch.setVisibility(View.GONE);
+                    item.setIcon(R.drawable.ic_search_black_24dp);
+                    go4LunchViewModel.setSearchZoneVisible(false);
+                    inputSearch.setText("");
                 }
                 return true;
             default:
@@ -221,13 +199,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Boolean updateMainFragment(Integer integer){
         switch (integer) {
             case R.id.action_map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit(); //.addToBackStack(null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmMapsFragment()).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_listview:
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new RestaurantListFragment()).commit(); //.addToBackStack(null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmRestaurantListFragment()).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_workmates:
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, new WorkmatesListFragment()).commit(); //.addToBackStack(null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmWorkmatesListFragment()).commit(); //.addToBackStack(null)
                 break;
             case R.id.action_chat:
                 //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
@@ -237,7 +215,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void launchFirstFragment(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, mMapsFragment).commit();
+        if (go4LunchViewModel.getSearchZoneVisible()) {
+            relativLayoutSearch.setVisibility(View.VISIBLE);
+            Log.i(TAG, String.valueOf(menu == null));
+            menu.findItem(R.id.app_bar_search).setIcon(R.drawable.ic_close_24);
+        }
+        switch (go4LunchViewModel.getBottomNavItem()) {
+            case R.id.action_map:
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmMapsFragment()).commit(); //.addToBackStack(null)
+                break;
+            case R.id.action_listview:
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmRestaurantListFragment()).commit(); //.addToBackStack(null)
+                break;
+            case R.id.action_workmates:
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmWorkmatesListFragment()).commit(); //.addToBackStack(null)
+                break;
+            case R.id.action_chat:
+                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
+                break;
+            default:
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmMapsFragment()).commit(); //.addToBackStack(null)
+                break;
+        }
     }
 
     public EditText getInputSearch(){return this.inputSearch;}
@@ -245,6 +244,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public ProgressBar getProgressBar(){return this.mProgressBar;}
 
     public BottomNavigationView getBottomNavigationView(){return bottomNavigationView;}
-
-
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -12,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.base.BaseFragment;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.google.android.gms.maps.model.LatLng;
@@ -25,19 +27,19 @@ import java.util.List;
 
 public class RestaurantListBuilder {
 
-    private String TAG = "--RestaurantListBuilder";
+    private String TAG = "RestaurantListBuilder";
 
     private Context mContext;
     private List<Restaurant> mRestaurantList;
-    private Callback mCallback;
+    private PlaceRestaurantsCallback mPlaceRestaurantsCallback;
     private String googleKey = "AIzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk";
     private int k;
     private int listSize;
     private int cpt;
 
-    public RestaurantListBuilder(Context context, Callback callback) {
+    public RestaurantListBuilder(Context context, PlaceRestaurantsCallback placeRestaurantsCallback) {
         mContext = context;
-        mCallback = callback;
+        mPlaceRestaurantsCallback = placeRestaurantsCallback;
         mRestaurantList = new ArrayList<>();
         listSize = 0;
         cpt = 0;
@@ -72,14 +74,18 @@ public class RestaurantListBuilder {
                             List<String> iDList = new ArrayList<>();
                             JSONArray jsonArray = response.getJSONArray("results");
                             listSize = jsonArray.length();
-
-                            for (int i = 0; i< jsonArray.length(); i++){
-                                JSONObject jsonObjt = (JSONObject) jsonArray.get(i);
-                                iDList.add(jsonObjt.getString("place_id"));
-                               }
-                            getRestaurantDetailsIteration(iDList);
-                            Log.i(TAG,"iDList ok, size= "+listSize);
-
+                            if (listSize != 0) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObjt = (JSONObject) jsonArray.get(i);
+                                    iDList.add(jsonObjt.getString("place_id"));
+                                }
+                                getRestaurantDetailsIteration(iDList);
+                                Log.i(TAG, "iDList ok, size= " + listSize);
+                            }else {
+                                Log.i(TAG, "iDList empty, size= " + listSize);
+                                Toast.makeText(mContext, mContext.getResources().getString(R.string.no_near_restaurants), Toast.LENGTH_SHORT).show();
+                                mPlaceRestaurantsCallback.onFinish(mRestaurantList);
+                            }
                         }catch (Exception e){}
                     }
                 }, new Response.ErrorListener() {
@@ -220,7 +226,7 @@ public class RestaurantListBuilder {
                         cpt++;
 
                         if (cpt == listSize){
-                            mCallback.onFinish(mRestaurantList);
+                            mPlaceRestaurantsCallback.onFinish(mRestaurantList);
                             Log.i(TAG,"equality "+mRestaurantList.size());
                         }
                     }

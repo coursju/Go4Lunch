@@ -24,24 +24,15 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import butterknife.BindView;
 
 public class SettingActivity extends BaseActivity {
-    @BindView(R.id.delete_user_button)
-    Button deleteUserButton;
-    @BindView(R.id.change_radius_btn)
-    ImageButton changeRadiusButton;
-    @BindView(R.id.change_email_btn)
-    ImageButton changeEmailButton;
-    @BindView(R.id.change_name_btn)
-    ImageButton changeNameButton;
-    @BindView(R.id.change_password_btn)
-    ImageButton changePasswordButton;
-    @BindView(R.id.change_name_txt)
-    EditText changeNameText;
-    @BindView(R.id.change_email_txt)
-    EditText changeEmailText;
-    @BindView(R.id.change_password_txt)
-    EditText changePasswordText;
-    @BindView(R.id.change_radius_txt)
-    EditText changeRadiusText;
+    @BindView(R.id.delete_user_button) Button deleteUserButton;
+    @BindView(R.id.change_radius_btn) ImageButton changeRadiusButton;
+    @BindView(R.id.change_email_btn) ImageButton changeEmailButton;
+    @BindView(R.id.change_name_btn) ImageButton changeNameButton;
+    @BindView(R.id.change_password_btn) ImageButton changePasswordButton;
+    @BindView(R.id.change_name_txt) EditText changeNameText;
+    @BindView(R.id.change_email_txt) EditText changeEmailText;
+    @BindView(R.id.change_password_txt) EditText changePasswordText;
+    @BindView(R.id.change_radius_txt) EditText changeRadiusText;
 
     private Activity mActivity = this;
     private FirebaseUser userToModify;
@@ -65,7 +56,6 @@ public class SettingActivity extends BaseActivity {
         deleteUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new SignOutOrDeleteUser(getApplicationContext(),mActivity).deleteUserFromFirebase();
             }
         });
@@ -80,6 +70,5 @@ public class SettingActivity extends BaseActivity {
                 changeRadiusButton.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorGreen)));
             }
         });
-
     }
 }

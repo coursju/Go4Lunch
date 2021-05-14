@@ -1,28 +1,21 @@
 package com.coursju.go4lunch.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
-import android.provider.SyncStateContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.coursju.go4lunch.R;
-import com.coursju.go4lunch.controler.dummy.DummyContent.DummyItem;
 import com.coursju.go4lunch.modele.Expected;
-import com.coursju.go4lunch.utils.Constants;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyExpectedRecyclerViewAdapter extends RecyclerView.Adapter<MyExpectedRecyclerViewAdapter.ViewHolder> {
 
     private final List<Expected> mValues;

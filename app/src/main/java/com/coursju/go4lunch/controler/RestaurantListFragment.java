@@ -24,16 +24,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- */
 public class RestaurantListFragment extends BaseFragment {
 
-    private String TAG = "--RestaurantsListFragment--";
+    private final String TAG = "RestaurantsListFragment--";
     private RecyclerView recyclerView;
-
-    public RestaurantListFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,11 +35,16 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        inputSearchIsEmpty();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;

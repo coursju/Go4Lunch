@@ -1,56 +1,44 @@
 package com.coursju.go4lunch.base;
 
-import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.coursju.go4lunch.controler.MainActivity;
 import com.coursju.go4lunch.modele.Restaurant;
-import com.coursju.go4lunch.utils.Callback;
+import com.coursju.go4lunch.utils.PlaceRestaurantsCallback;
 import com.coursju.go4lunch.utils.RestaurantListBuilder;
-import com.google.android.gms.common.api.ApiException;
+import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 public class BaseFragment extends Fragment {
+    private static final String TAG = "BaseFragment--";
 
-    private static final String TAG = "--BaseFragment--";
+    protected Go4LunchViewModel go4LunchViewModel;
+
     protected FusedLocationProviderClient mFusedLocationProviderClient;
-    public static LatLng currentPosition;
+//    public static LatLng currentPosition;
     public static Location currentLocation;
-    protected Location mLastKnownLocation;
-    public static PlacesClient mPlacesClient;
-    protected final LatLng mDefaultLocation = new LatLng(-21.052633331, 55.2267300518);
+//    protected Location mLastKnownLocation;
+//    public PlacesClient mPlacesClient;
 
     protected static List<Restaurant> restaurantsList = new ArrayList<>();
 
-    protected static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    protected static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     protected static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     protected Boolean mLocationPermissionGranted = false;
-
+    protected Boolean isFiltered = false;
     protected RestaurantListBuilder mRestaurantListBuilder;
-    protected Callback callback;
+    protected PlaceRestaurantsCallback placeRestaurantsCallback;
 
     public static double BOUNDS = 0.02;
 
@@ -63,43 +51,59 @@ public class BaseFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         Log.i(TAG,"onCreate");
-        placesInitialisation();
-        configureInputSearch();
+        super.onCreate(savedInstanceState);
+
+        configureViewModel();
+//        placesInitialisation();
         configureCallback();
-        mRestaurantListBuilder = new RestaurantListBuilder(getContext(),callback);
-        mMainActivity = (MainActivity) getActivity();
+        mRestaurantListBuilder = new RestaurantListBuilder(getContext(), placeRestaurantsCallback);
     }
 
-    private void placesInitialisation(){
-        Places.initialize(getContext(), apiKey);
-        mPlacesClient = Places.createClient(getContext());
+    @Override
+    public void onResume() {
+        configureInputSearch();
+        super.onResume();
     }
+
+    protected void configureViewModel(){
+        go4LunchViewModel = new ViewModelProvider(requireActivity()).get(Go4LunchViewModel.class);
+    }
+
+//    private void placesInitialisation(){
+//        Places.initialize(getContext(), apiKey);
+//        mPlacesClient = Places.createClient(getContext());
+//    }
 
     private void configureInputSearch(){
+        mMainActivity = (MainActivity) getActivity();
         if (mMainActivity != null) {
             mMainActivity.getInputSearch().addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
                 @Override
                 public void afterTextChanged(Editable s) {
+                    isFiltered = true;
                     searchByFilteringRestaurants(s.toString());
                 }
             });
         }
     }
 
+    protected void inputSearchIsEmpty(){
+        if (mMainActivity != null){
+            if (!mMainActivity.getInputSearch().getText().toString().equals("")){
+                searchByFilteringRestaurants((mMainActivity.getInputSearch().getText().toString()));
+            }
+        }
+    }
+
     private void configureCallback(){
-        callback = new Callback() {
+        placeRestaurantsCallback = new PlaceRestaurantsCallback() {
             @Override
             public void onFinish(List<Restaurant> restaurantList) {
                 addToRestaurantsList(restaurantList);
@@ -113,11 +117,13 @@ public class BaseFragment extends Fragment {
     }
 
     protected void addToRestaurantsList(List<Restaurant> mList){
+        go4LunchViewModel.setRestaurantsList(mList);
         restaurantsList.clear();
         restaurantsList.addAll(mList);
     }
 
     public void searchByFilteringRestaurants(String query){
+        Log.i(TAG, "searchByFilteringRestaurants: "+query);
         List<Restaurant> filteredRestaurantsList = new ArrayList();
         String toUpperQuery = query.toUpperCase();
 
@@ -133,6 +139,16 @@ public class BaseFragment extends Fragment {
         showRestaurants(filteredRestoList);
     }
 
+    public List<Restaurant> getFilteredRestaurantsList(String query){
+        List<Restaurant> filteredRestaurantsList = new ArrayList();
+        String toUpperQuery = query.toUpperCase();
 
+        for (Restaurant restaurant: restaurantsList){
+            if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
+                filteredRestaurantsList.add(restaurant);
+            }
+        }
+        return filteredRestaurantsList;
+    }
 
 }
