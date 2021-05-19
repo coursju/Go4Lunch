@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Restaurant {
@@ -14,8 +13,6 @@ public class Restaurant {
     private String mAddress = null;
     private String mKindOfFood = null;
     private String mRestaurantPhotoReference = null;
-    @Exclude
-//    private List<Workmate> expectedWorkmates = null;
     private String mWebsite = null;
     private String mPhoneNumbers = null;
     private Integer mLikeRate = null;
@@ -45,7 +42,6 @@ public class Restaurant {
         mDistance = distance;
         mOpeningHours = openingHours;
         mIsOpen = isOpen;
-//        expectedWorkmates = new ArrayList<>();
     }
 
     public String getRestaurantPhotoReference() {
@@ -104,8 +100,6 @@ public class Restaurant {
         return mDistance;
     }
 
-//    public List<Workmate> getExpectedWorkmates(){return expectedWorkmates;}
-
     public void setName(String name) {
         mName = name;
     }
@@ -121,10 +115,6 @@ public class Restaurant {
     public void setRestaurantPhotoReference(String restaurantPhotoReference) {
         mRestaurantPhotoReference = restaurantPhotoReference;
     }
-
-//    public void setExpectedWorkmates(List<Workmate> expectedWorkmates) {
-//        this.expectedWorkmates = expectedWorkmates;
-//    }
 
     public void setWebsite(String website) {
         mWebsite = website;
@@ -160,6 +150,6 @@ public class Restaurant {
 
     @Override
     public String toString(){
-        return mName;//+" "+mOpeningHours.toString();//mAddress+" "+mDistance+" "+mWebsite+mPhoneNumbers+" "+mLatLng.toString();
+        return mName;
     }
 }

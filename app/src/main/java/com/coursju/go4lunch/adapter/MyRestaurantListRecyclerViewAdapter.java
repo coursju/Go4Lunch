@@ -1,8 +1,5 @@
 package com.coursju.go4lunch.adapter;
 
-import androidx.annotation.RequiresApi;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,15 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.controler.DetailsActivity;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
+import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<MyRestaurantListRecyclerViewAdapter.ViewHolder>{
 
@@ -27,11 +32,13 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
     private final List<Restaurant> mValues;
     private final Context mContext;
     private List<Workmate> mWorkmateList;
+    private Map<String, Map<String, Object>> favoritesMap;
 
-    public MyRestaurantListRecyclerViewAdapter(List<Restaurant> items , Context context, List<Workmate> workmateList) {
-        mValues = items;
+    public MyRestaurantListRecyclerViewAdapter(Context context, List<Restaurant> restoList, Go4LunchViewModel go4LunchViewModel) {
+        this.favoritesMap = Constants.FAVORITES_MAP;
+        mValues = restoList;
         mContext = context;
-        mWorkmateList = workmateList;
+        mWorkmateList = go4LunchViewModel.getWorkmateList();
     }
 
     @Override
@@ -59,13 +66,14 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         holder.mWorkmatesNumber.setText("("+i+")");
         holder.itemRestoOverview.setImageBitmap(mValues.get(position).getBitmap());
 
-//        int day = LocalDate.now().getDayOfWeek().getValue();//.getDisplayName(TextStyle.NARROW_STANDALONE, Locale.ENGLISH);
-//        if (mValues.get(position).getOpeningHours() != null){
-//            Log.i(TAG,mValues.get(position).getOpeningHours().get(day)+" name: "+mValues.get(position).getName());
-//
-//        }
-
-
+        int day = LocalDate.now().getDayOfWeek().getValue();
+        if (mValues.get(position).getOpeningHours() != null){
+            if (mValues.get(position).getOpeningHours().size() > 0){
+                String[] tab = mValues.get(position).getOpeningHours().get(day).split("day: ");
+                holder.mOpeningHours.setText(tab[1]);
+            }
+        }
+        holder.mStar.setRating(getFavorites(mValues.get(position).getName()));
     }
 
     @Override
@@ -80,9 +88,7 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         public final TextView mOpeningHours;
         public final TextView mDistance;
         public final TextView mWorkmatesNumber;
-        public final ImageView mStar1;
-        public final ImageView mStar2;
-        public final ImageView mStar3;
+        public final RatingBar mStar;
         public final ImageView itemRestoOverview;
 
         public ViewHolder(View view) {
@@ -93,9 +99,7 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
             mOpeningHours = (TextView) view.findViewById(R.id.item_resto_openinghours);
             mDistance = (TextView) view.findViewById(R.id.item_resto_distance);
             mWorkmatesNumber = (TextView) view.findViewById(R.id.item_resto_workmates);
-            mStar1 = (ImageView) view.findViewById(R.id.item_resto_star1);
-            mStar2 = (ImageView) view.findViewById(R.id.item_resto_star2);
-            mStar3 = (ImageView) view.findViewById(R.id.item_resto_star3);
+            mStar = (RatingBar) view.findViewById(R.id.item_resto_star);
             itemRestoOverview = (ImageView) view.findViewById(R.id.item_resto_overview);
         }
 
@@ -111,7 +115,24 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
             Constants.DETAILS_RESTAURANT = mValues.get(mPosition);
             Intent intent = new Intent(mContext, DetailsActivity.class);
             mContext.startActivity(intent);
+        }
+    }
 
+    private Float getFavorites(String restaurantName){
+        if (favoritesMap.containsKey(restaurantName)){
+            Collection<Object> rate = favoritesMap.get(restaurantName).values();
+            if (rate.size() != 0) {
+                long cpt = 0;
+                for (Object obj : rate) {
+                    Boolean boolObj = (Boolean) obj;
+                    cpt += (boolObj) ? 1 : 0;
+                }
+                return cpt / rate.size() * 3f;
+            }else {
+                return 0f;
+            }
+        }else{
+            return 0f;
         }
     }
 }

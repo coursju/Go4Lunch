@@ -2,6 +2,7 @@ package com.coursju.go4lunch.controler;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class RestaurantListFragment extends BaseFragment {
 
-    private final String TAG = "RestaurantsListFragment--";
+    private final String TAG = "RestaurantsListFragment";
     private RecyclerView recyclerView;
 
     @Override
@@ -50,7 +51,6 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void showRestaurants(List<Restaurant> restoList){
-        recyclerView.setAdapter(new MyRestaurantListRecyclerViewAdapter(restoList, getContext(), go4LunchViewModel.getWorkmateList()));
+        recyclerView.setAdapter(new MyRestaurantListRecyclerViewAdapter(getContext(), restoList, go4LunchViewModel));
     }
-
 }

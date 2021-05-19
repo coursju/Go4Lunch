@@ -27,13 +27,21 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.coursju.go4lunch.R;
+import com.coursju.go4lunch.api.FavoritesHelper;
 import com.coursju.go4lunch.base.BaseActivity;
 import com.coursju.go4lunch.utils.Constants;
 import com.coursju.go4lunch.utils.SignOutOrDeleteUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -63,6 +71,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (!isCurrentUserLogged()){
             launchAuthentification();
         }else {
+            this.getFavoritesMap();
             this.configureMainToolbar();
             this.configureDrawerLayout();
             this.configureDrawerHeader();
@@ -116,6 +125,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void getFavoritesMap(){
+        FavoritesHelper
+                .getFavoritesCollection()
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Map<String, Map<String, Object>> favoritesMap = new HashMap<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                favoritesMap.put(document.getId(), document.getData());
+                                Log.i(TAG, document.getId() + " => " + document.getData());
+                            }
+                            Constants.FAVORITES_MAP = favoritesMap;
+                        } else {
+                            Log.i(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

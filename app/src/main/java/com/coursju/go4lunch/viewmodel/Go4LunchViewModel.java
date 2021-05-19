@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel;
 import com.coursju.go4lunch.controler.MapsFragment;
 import com.coursju.go4lunch.controler.RestaurantListFragment;
 import com.coursju.go4lunch.controler.WorkmatesListFragment;
+import com.coursju.go4lunch.modele.Favorite;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Go4LunchViewModel extends ViewModel {
 

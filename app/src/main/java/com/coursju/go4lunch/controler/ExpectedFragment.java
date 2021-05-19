@@ -29,11 +29,11 @@ public class ExpectedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_expected_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            //TODO remove ponctuations on restaurants names
             CollectionReference ref = ExpectedHelper.getExpectedRestaurant(Constants.DETAILS_RESTAURANT.getName());
 
             ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

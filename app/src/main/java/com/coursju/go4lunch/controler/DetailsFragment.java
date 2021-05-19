@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,15 +27,20 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.api.ExpectedHelper;
+import com.coursju.go4lunch.api.FavoritesHelper;
 import com.coursju.go4lunch.api.WorkmateHelper;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
+import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailsFragment extends Fragment {
 
@@ -49,7 +55,7 @@ public class DetailsFragment extends Fragment {
     private TextView detailsRestoName;
     private TextView detailsRestoAddress;
     private ImageView detailsStar1;
-
+    private Boolean isLiked = false;
 
     @Nullable
     @Override
@@ -62,11 +68,13 @@ public class DetailsFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getRate();
         linkView(view);
         updateView();
         configureFloatingButtonListener();
         configurePhoneCallButtonListener();
         configureWebsiteButtonListener();
+        configureLikeButtonListener();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -81,9 +89,27 @@ public class DetailsFragment extends Fragment {
         detailsStar1 = view.findViewById(R.id.details_star_1);
     }
 
+    private void getRate(){
+        if (Constants.FAVORITES_MAP.containsKey(Constants.DETAILS_RESTAURANT.getName())) {
+            Log.i(TAG, "exist");
+            if (Constants.FAVORITES_MAP.get(Constants.DETAILS_RESTAURANT.getName()).containsKey(Constants.CURRENT_WORKMATE.getUid())) {
+                Boolean value = (Boolean) Constants.FAVORITES_MAP
+                        .get(Constants.DETAILS_RESTAURANT.getName())
+                        .get(Constants.CURRENT_WORKMATE.getUid());
+                this.isLiked = value;
+            }
+        }else{
+            this.isLiked = false;
+        }
+        Log.i(TAG, String.valueOf(isLiked));
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void updateView(){
         if (Constants.DETAILS_RESTAURANT != null) {
+            if (isLiked){
+                detailsStar1.setVisibility(View.VISIBLE);
+            }
             detailsRestoName.setText(Constants.DETAILS_RESTAURANT.getName());
             detailsRestoAddress.setText(Constants.DETAILS_RESTAURANT.getAddress());
             if (Constants.DETAILS_RESTAURANT.getBitmap()==null
@@ -152,6 +178,26 @@ public class DetailsFragment extends Fragment {
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(intent);
                 }
+            }
+        });
+    }
+
+    private void configureLikeButtonListener(){
+        detailsLikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isLiked = !isLiked;
+                if (isLiked){
+                    detailsStar1.setVisibility(View.VISIBLE);
+                }else {
+                    detailsStar1.setVisibility(View.INVISIBLE);
+                }
+                Map<String, Object> entry = new HashMap<>();
+                        entry.put(Constants.CURRENT_WORKMATE.getUid(),isLiked);
+                Constants.FAVORITES_MAP
+                        .put(Constants.DETAILS_RESTAURANT.getName(), entry);
+                Log.i(TAG, Constants.FAVORITES_MAP.toString());
+                FavoritesHelper.createFavorite(Constants.CURRENT_WORKMATE.getUid(), Constants.DETAILS_RESTAURANT.getName(), isLiked);
             }
         });
     }
