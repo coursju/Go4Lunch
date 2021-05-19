@@ -1,6 +1,5 @@
 package com.coursju.go4lunch.base;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.coursju.go4lunch.adapter.MyWorkmatesListRecyclerViewAdapter;
 import com.coursju.go4lunch.api.WorkmateHelper;
 import com.coursju.go4lunch.controler.MainActivity;
 import com.coursju.go4lunch.modele.Restaurant;
@@ -35,14 +33,9 @@ public class BaseFragment extends Fragment {
     protected Boolean isFiltered = false;
     protected RestaurantListBuilder mRestaurantListBuilder;
     protected PlaceRestaurantsCallback placeRestaurantsCallback;
-
-
     protected MainActivity mMainActivity;
 
     protected void showRestaurants(List<Restaurant> restoList){}
-
-        //TODO find a solution for apiKey
-    protected String apiKey = "AIzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk";//getActivity().getResources().getString(R.string.google_key);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,8 +108,6 @@ public class BaseFragment extends Fragment {
 
     protected void addToRestaurantsList(List<Restaurant> mList){
         go4LunchViewModel.setRestaurantsList(mList);
-//        restaurantsList.clear();
-//        restaurantsList.addAll(mList);
     }
 
     public void searchByFilteringRestaurants(String query){
@@ -124,11 +115,6 @@ public class BaseFragment extends Fragment {
         List<Restaurant> filteredRestaurantsList = new ArrayList();
         String toUpperQuery = query.toUpperCase();
 
-//            for (Restaurant restaurant: restaurantsList){
-//                if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
-//                    filteredRestaurantsList.add(restaurant);
-//                }
-//            }
         for (Restaurant restaurant: go4LunchViewModel.getRestaurantsList()){
             if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
                 filteredRestaurantsList.add(restaurant);
@@ -145,11 +131,6 @@ public class BaseFragment extends Fragment {
         List<Restaurant> filteredRestaurantsList = new ArrayList();
         String toUpperQuery = query.toUpperCase();
 
-//        for (Restaurant restaurant: restaurantsList){
-//            if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
-//                filteredRestaurantsList.add(restaurant);
-//            }
-//        }
         for (Restaurant restaurant: go4LunchViewModel.getRestaurantsList()){
             if (restaurant.getName().toUpperCase().contains(toUpperQuery)){
                 filteredRestaurantsList.add(restaurant);

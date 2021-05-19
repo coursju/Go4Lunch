@@ -91,8 +91,7 @@ public class RestaurantListBuilder {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                       // textView.setText("That didn't work!");
-
+                       Log.d(TAG, error.getMessage());
                     }
                 });
         queue.add(jsonObjectRequest);

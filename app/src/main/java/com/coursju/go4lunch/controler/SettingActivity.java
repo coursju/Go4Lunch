@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,16 +14,24 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.coursju.go4lunch.R;
+import com.coursju.go4lunch.api.ExpectedHelper;
 import com.coursju.go4lunch.base.BaseActivity;
+import com.coursju.go4lunch.modele.Expected;
 import com.coursju.go4lunch.utils.Constants;
 import com.coursju.go4lunch.utils.SignOutOrDeleteUser;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 import butterknife.BindView;
 
 public class SettingActivity extends BaseActivity {
+    private static final String TAG = "SettingActivity";
     @BindView(R.id.delete_user_button) Button deleteUserButton;
     @BindView(R.id.change_radius_btn) ImageButton changeRadiusButton;
     @BindView(R.id.change_email_btn) ImageButton changeEmailButton;

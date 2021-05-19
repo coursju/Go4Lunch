@@ -59,16 +59,8 @@
 
 <!--    RESTAURANTLISTBUILDER-->
     <string name="no_near_restaurants">Enable to find restaurants in the area</string>
-
-
-
-
-
-
-
-
-
-
+    <string name="notification_title">Your lunch</string>
+    <string name="default_notification_channel_id">1234</string>
 
 
 </resources>
