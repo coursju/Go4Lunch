@@ -76,7 +76,7 @@ public class BaseFragment extends Fragment {
     }
 
     public void getFirebaseWorkmateList(){
-        WorkmateHelper.getUsersCollection().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        WorkmateHelper.getWorkmatesCollection().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 go4LunchViewModel.setWorkmateList(queryDocumentSnapshots.toObjects(Workmate.class));

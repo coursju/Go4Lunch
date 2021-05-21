@@ -1,24 +1,14 @@
 package com.coursju.go4lunch.modele;
 
-import com.google.firebase.firestore.Exclude;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Workmate {
 
     private String uid = "";
     private String mWorkmatePicture = "";
     private String mWorkmateName = "";
-//    private String mWorkmateFirstName = "";
     private String mWorkmateEmail = "";
     private Restaurant mYourLunch = new Restaurant();
-//    private List<Restaurant> mLikedRestaurants = new ArrayList<>();//String
-    //preferences, settings = notifications, distances...
 
-
-    public Workmate() {
-    }
+    public Workmate() {}
 
     public Workmate(String uid, String workmatePicture, String workmateName, String workmateEmail, Restaurant yourLunch) {
         this.uid = uid;

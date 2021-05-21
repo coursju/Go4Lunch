@@ -1,15 +1,9 @@
 package com.coursju.go4lunch.authentification;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.api.WorkmateHelper;
@@ -19,12 +13,12 @@ import com.coursju.go4lunch.modele.Restaurant;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
 
 public class AuthentificationActivity extends BaseActivity {
 
@@ -139,7 +133,7 @@ public class AuthentificationActivity extends BaseActivity {
             String uid = this.getCurrentUser().getUid();
             String userEmail = this.getCurrentUser().getEmail();
 
-            WorkmateHelper.createUser(uid, urlPicture, userName, userEmail, new Restaurant()).addOnFailureListener(this.onFailureListener());
+            WorkmateHelper.createWorkmate(uid, urlPicture, userName, userEmail, new Restaurant()).addOnFailureListener(this.onFailureListener());
         }
     }
 

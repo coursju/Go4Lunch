@@ -219,7 +219,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
     private void updateConstantUser(){
         Constants.CURRENT_USER = FirebaseAuth.getInstance().getCurrentUser();
-        WorkmateHelper.getUser(Constants.CURRENT_USER.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        WorkmateHelper.getWorkmate(Constants.CURRENT_USER.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Constants.CURRENT_WORKMATE = documentSnapshot.toObject(Workmate.class);

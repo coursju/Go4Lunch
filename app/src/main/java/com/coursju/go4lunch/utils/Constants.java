@@ -2,6 +2,7 @@ package com.coursju.go4lunch.utils;
 
 import android.location.Location;
 
+import com.coursju.go4lunch.controler.MainActivity;
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
 import com.google.firebase.auth.FirebaseAuth;

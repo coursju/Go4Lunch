@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_facebook" />
+            app:srcCompat="@drawable/ic_logo_go4lunch_thumbnail" />
 
         <TextView
             android:id="@+id/workmate_list_text"

@@ -122,12 +122,13 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         if (favoritesMap.containsKey(restaurantName)){
             Collection<Object> rate = favoritesMap.get(restaurantName).values();
             if (rate.size() != 0) {
-                long cpt = 0;
+                Float cpt = 0f;
                 for (Object obj : rate) {
                     Boolean boolObj = (Boolean) obj;
-                    cpt += (boolObj) ? 1 : 0;
+                    cpt += (boolObj) ? 1f : 0f;
                 }
-                return cpt / rate.size() * 3f;
+                Log.i(TAG, String.valueOf(cpt / rate.size() * 3f));
+                return (cpt / rate.size()) * 3f;
             }else {
                 return 0f;
             }

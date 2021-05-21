@@ -1,46 +1,33 @@
 package com.coursju.go4lunch.api;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import com.coursju.go4lunch.modele.Restaurant;
 import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
-import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class WorkmateHelper {
     private static final String COLLECTION_NAME = "workmates";
 
-    // --- COLLECTION REFERENCE ---
-
-    public static CollectionReference getUsersCollection(){
+    public static CollectionReference getWorkmatesCollection(){
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
 
-    // --- CREATE ---
-
-    public static Task<Void> createUser(String uid, String workmatePicture, String workmateName, String workmateEmail, Restaurant mResto) {
-        Workmate userToCreate = new Workmate(uid, workmatePicture, workmateName, workmateEmail, mResto );
-        return WorkmateHelper.getUsersCollection().document(uid).set(userToCreate);
+    public static Task<Void> createWorkmate(String uid, String workmatePicture, String workmateName, String workmateEmail, Restaurant mResto) {
+        Workmate workmateToCreate = new Workmate(uid, workmatePicture, workmateName, workmateEmail, mResto );
+        return WorkmateHelper.getWorkmatesCollection().document(uid).set(workmateToCreate);
     }
 
-    // --- GET ---
-
-    public static Task<DocumentSnapshot> getUser(String uid){
-        return WorkmateHelper.getUsersCollection().document(uid).get();
+    public static Task<DocumentSnapshot> getWorkmate(String uid){
+        return WorkmateHelper.getWorkmatesCollection().document(uid).get();
     }
 
-    // --- UPDATE ---
-
-    public static Task<Void> updateUsername(String username, String uid) {
-        return WorkmateHelper.getUsersCollection().document(uid).update("username", username);
+    public static Task<Void> updateWorkmateFromSetting() {
+        return WorkmateHelper.getWorkmatesCollection()
+                .document(Constants.CURRENT_WORKMATE.getUid())
+                .set(Constants.CURRENT_WORKMATE);
     }
 
     public static Task<Void> updateRestaurant(Restaurant restaurant) {
@@ -52,13 +39,11 @@ public class WorkmateHelper {
         workmate.getYourLunch().setOpeningHours(null);
         workmate.getYourLunch().setLatLng(null);
 
-        return WorkmateHelper.getUsersCollection().document(Constants.CURRENT_USER.getUid()).set(workmate);
+        return WorkmateHelper.getWorkmatesCollection().document(Constants.CURRENT_USER.getUid()).set(workmate);
     }
 
-    // --- DELETE ---
-
-    public static Task<Void> deleteUser(String uid) {
-        return WorkmateHelper.getUsersCollection().document(uid).delete();
+    public static Task<Void> deleteWorkmate(String uid) {
+        return WorkmateHelper.getWorkmatesCollection().document(uid).delete();
     }
 
 }

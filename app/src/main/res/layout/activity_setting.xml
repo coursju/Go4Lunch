@@ -6,154 +6,221 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/change_name_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072"
-        app:srcCompat="@drawable/ic_check_circle_black_48dp" />
-
-    <ImageButton
-        android:id="@+id/change_email_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.238"
-        app:srcCompat="@drawable/ic_check_circle_black_48dp" />
-
-    <ImageButton
-        android:id="@+id/change_password_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.419"
-        app:srcCompat="@drawable/ic_check_circle_black_48dp" />
-
-    <ImageButton
-        android:id="@+id/change_radius_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:foreground="@drawable/ic_check_circle_black_48dp"
-        android:foregroundTint="@color/alpha_grey"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout4"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.59" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="291dp"
-        android:layout_height="72dp"
-        android:gravity="start|top"
-        android:hint="@string/change_name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.133"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.053">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/change_name_txt"
-            android:layout_width="277dp"
+        <LinearLayout
+            android:id="@+id/image_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="291dp"
-        android:layout_height="72dp"
-        android:gravity="start|top"
-        android:hint="@string/change_email"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.133"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.224">
+            <ImageView
+                android:id="@+id/setting_picture_thumbnail"
+                android:layout_width="@dimen/thumbnail_size"
+                android:layout_height="@dimen/thumbnail_size"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_logo_go4lunch_thumbnail" />
 
-        <EditText
-            android:id="@+id/change_email_txt"
-            android:layout_width="279dp"
+            <ProgressBar
+                android:id="@+id/setting_progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/change_picture_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/setting_margin_size"
+                android:layout_weight="1"
+                android:onClick="pictureButtonClick"
+                android:text="@string/setting_change_picture"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <LinearLayout
+            android:id="@+id/name_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="291dp"
-        android:layout_height="72dp"
-        android:gravity="start|top"
-        android:hint="@string/change_password"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.133"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.414">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="291dp"
+                android:layout_height="72dp"
+                android:gravity="start|top"
+                android:hint="@string/setting_change_name">
 
-        <EditText
-            android:id="@+id/change_password_txt"
-            android:layout_width="277dp"
+                <EditText
+                    android:id="@+id/change_name_txt"
+                    android:layout_width="277dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:onClick="nameTextClick" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/change_name_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_uncheck_circle_48dp"
+                android:onClick="nameButtonClick" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <LinearLayout
+            android:id="@+id/email_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPassword" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="291dp"
+                android:layout_height="72dp"
+                android:gravity="start|top"
+                android:hint="@string/setting_change_email">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout4"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="291dp"
-        android:layout_height="72dp"
-        android:gravity="start|top"
-        android:hint="@string/change_radius"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.133"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.596">
+                <EditText
+                    android:id="@+id/change_email_txt"
+                    android:layout_width="279dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:onClick="emailTextClick" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/change_radius_txt"
-            android:layout_width="274dp"
+            <ImageButton
+                android:id="@+id/change_email_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_uncheck_circle_48dp"
+                android:onClick="emailButtonClick" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <LinearLayout
+            android:id="@+id/pasword_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="number" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="291dp"
+                android:layout_height="72dp"
+                android:gravity="start|top"
+                android:hint="@string/setting_change_password">
 
-    <Button
-        android:id="@+id/delete_user_button"
-        android:layout_width="302dp"
-        android:layout_height="75dp"
-        android:text="@string/delete_account"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951" />
+                <EditText
+                    android:id="@+id/change_password_txt"
+                    android:layout_width="277dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPassword"
+                    android:onClick="passwordTextClick" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/change_password_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_uncheck_circle_48dp"
+                android:onClick="passwordButtonClick" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <LinearLayout
+            android:id="@+id/radius_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout4"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="291dp"
+                android:layout_height="72dp"
+                android:gravity="start|top"
+                android:hint="@string/setting_change_radius">
+
+                <EditText
+                    android:id="@+id/change_radius_txt"
+                    android:layout_width="274dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:onClick="radiusTextClick" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/change_radius_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_uncheck_circle_48dp"
+                android:onClick="radiusButtonClick" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_space_size" />
+
+        <Button
+            android:id="@+id/delete_user_button"
+            android:layout_width="302dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:onClick="deleteButtonClick"
+            android:text="@string/setting_delete_account" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

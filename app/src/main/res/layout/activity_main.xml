@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     app:layout_constraintEnd_toStartOf="parent"
-    tools:openDrawer="start"
-    tools:context="com.coursju.go4lunch.controler.MainActivity">
+    tools:context="com.coursju.go4lunch.controler.MainActivity"
+    tools:openDrawer="start">
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -119,9 +117,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/orange_design"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/activity_main_nav_header"
-        app:menu="@menu/activity_main_menu_drawer"/>
+        app:menu="@menu/activity_main_menu_drawer" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

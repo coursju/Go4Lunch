@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
 
     <!-- Main ACTIVITY -->
@@ -50,17 +50,25 @@
     <string name="hasnt_decided">hasn\' t decided yet</string>
 
     <!--    SETTING-->
-    <string name="title">Setting</string>
-    <string name="change_name">Change name</string>
-    <string name="delete_account">Delete account</string>
-    <string name="change_email">Change email</string>
-    <string name="change_password">Change password</string>
-    <string name="change_radius">Change radius</string>
+    <string name="setting_title">Setting</string>
+    <string name="setting_change_name">Change name</string>
+    <string name="setting_delete_account">Delete account</string>
+    <string name="setting_change_email">Change email</string>
+    <string name="setting_change_password">Change password</string>
+    <string name="setting_change_radius">Change radius</string>
+    <string name="setting_change_picture">change picture</string>
+    <string name="setting_success">Field modified !</string>
+    <string name="setting_failure">Something went wrong</string>
+    <string name="empty_field">The field is empty !</string>
 
 <!--    RESTAURANTLISTBUILDER-->
     <string name="no_near_restaurants">Enable to find restaurants in the area</string>
     <string name="notification_title">Your lunch</string>
     <string name="default_notification_channel_id">1234</string>
+
+<!--    FACEBOOK AUTH-->
+    <string name="facebook_application_id" translatable="false">307660174259885</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb307660174259885</string>
 
 
 </resources>

@@ -2,8 +2,13 @@ package com.coursju.go4lunch.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
+import com.coursju.go4lunch.api.ExpectedHelper;
+import com.coursju.go4lunch.api.WorkmateHelper;
+import com.coursju.go4lunch.authentification.AuthentificationActivity;
 import com.coursju.go4lunch.controler.MainActivity;
+import com.coursju.go4lunch.modele.Workmate;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -27,12 +32,10 @@ public class SignOutOrDeleteUser {
                 .addOnSuccessListener(mActivity, this.updateUIAfterRESTRequestsCompleted(SIGN_OUT_TASK));
     }
 
-    public void deleteUserFromFirebase(){ // doesn't work actually
-//        if (this.getCurrentUser() != null) {
+    public void deleteUserFromFirebase(){
             AuthUI.getInstance()
                     .delete(mContext)
                     .addOnSuccessListener(mActivity, this.updateUIAfterRESTRequestsCompleted(DELETE_USER_TASK));
-        //}
     }
 
     private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(final int origin){
@@ -44,7 +47,14 @@ public class SignOutOrDeleteUser {
                         mActivity.finish();
                         break;
                     case DELETE_USER_TASK:
-                        mActivity.finish();// doesn't work actually
+                        Workmate w = Constants.CURRENT_WORKMATE;
+                        WorkmateHelper.deleteWorkmate(w.getUid());
+                        if (Constants.CURRENT_WORKMATE.getYourLunch().getName() != null){
+                            ExpectedHelper.deleteExpected(w.getUid(), w.getYourLunch().getName());
+                        }
+                        Intent intent = new Intent(mContext, AuthentificationActivity.class);
+                        mContext.startActivity(intent);
+                        // static MainActivity.finish(); marche non plus
                         break;
                     default:
                         break;

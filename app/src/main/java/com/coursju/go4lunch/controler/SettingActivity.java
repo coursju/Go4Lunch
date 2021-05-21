@@ -1,37 +1,51 @@
 package com.coursju.go4lunch.controler;
 
 import android.app.Activity;
-import android.content.res.ColorStateList;
-import android.os.Build;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.coursju.go4lunch.R;
 import com.coursju.go4lunch.api.ExpectedHelper;
+import com.coursju.go4lunch.api.WorkmateHelper;
+import com.coursju.go4lunch.authentification.AuthentificationActivity;
 import com.coursju.go4lunch.base.BaseActivity;
 import com.coursju.go4lunch.modele.Expected;
+import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
 import com.coursju.go4lunch.utils.SignOutOrDeleteUser;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
+import java.io.ByteArrayOutputStream;
 
 import butterknife.BindView;
 
 public class SettingActivity extends BaseActivity {
     private static final String TAG = "SettingActivity";
+    private final static int TAKE_PICTURE = 1;
+
+    @BindView(R.id.change_picture_btn) Button changePictureButton;
+    @BindView(R.id.setting_progressBar) ProgressBar settingProgressBar;
+    @BindView(R.id.setting_picture_thumbnail) ImageView settingPictureThumbnail;
     @BindView(R.id.delete_user_button) Button deleteUserButton;
     @BindView(R.id.change_radius_btn) ImageButton changeRadiusButton;
     @BindView(R.id.change_email_btn) ImageButton changeEmailButton;
@@ -54,29 +68,198 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(getResources().getString(R.string.setting_title));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateView();
+    }
+
+    public void updateView(){
         userToModify = FirebaseAuth.getInstance().getCurrentUser();
-        setTitle(getResources().getString(R.string.title));
-        configureDeleteButton();
-        configureRadiusButton();
+        if (userToModify.getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(this.getCurrentUser().getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(settingPictureThumbnail);
+        }
+        changeNameText.setText(userToModify.getDisplayName());
+        changeEmailText.setText(userToModify.getEmail());
+        changeRadiusText.setText(Constants.RADIUS);
     }
 
-    private void configureDeleteButton(){
-        deleteUserButton.setOnClickListener(new View.OnClickListener() {
+    public void pictureButtonClick(View view){
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, TAKE_PICTURE);
+    }
+
+    public void nameTextClick(View v) {
+        changeNameButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+        Toast.makeText(mActivity, changeNameText.getText(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void nameButtonClick(View v) {
+        if (!changeNameText.getText().toString().equals("")){
+            changeNameButton.setBackground(getDrawable(R.drawable.ic_cloud_upload_48));
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(changeNameText.getText().toString())
+                    .build();
+            userToModify.updateProfile(profileUpdates).addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(mActivity, getString(R.string.setting_success), Toast.LENGTH_SHORT).show();
+                    changeNameButton.setBackground(getDrawable(R.drawable.ic_check_circle_48dp));
+                    Constants.CURRENT_WORKMATE.setWorkmateName(changeNameText.getText().toString());
+                    updateWorkmateAndExpected();
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(mActivity, getString(R.string.setting_failure), Toast.LENGTH_SHORT).show();
+                    changeNameButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+                }
+            });
+        }else{
+            Toast.makeText(mActivity, getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void emailTextClick(View v) {
+        changeEmailButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+    }
+
+    public void emailButtonClick(View v) {
+        if (!changeEmailText.getText().toString().equals("")){
+            changeEmailButton.setBackground(getDrawable(R.drawable.ic_cloud_upload_48));
+            userToModify.updateEmail(changeEmailText.getText().toString()).addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(mActivity, getString(R.string.setting_success), Toast.LENGTH_SHORT).show();
+                    changeEmailButton.setBackground(getDrawable(R.drawable.ic_check_circle_48dp));
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(mActivity, getString(R.string.setting_failure), Toast.LENGTH_SHORT).show();
+                    changeEmailButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+                }
+            });
+        }else{
+            Toast.makeText(mActivity, getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void passwordTextClick(View v) {
+        changePasswordButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+    }
+
+    public void passwordButtonClick(View v) {
+        if (!changePasswordText.getText().toString().equals("")){
+            changePasswordButton.setBackground(getDrawable(R.drawable.ic_cloud_upload_48));
+            userToModify.updatePassword(changePasswordText.getText().toString()).addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(mActivity, getString(R.string.setting_success), Toast.LENGTH_SHORT).show();
+                    changePasswordButton.setBackground(getDrawable(R.drawable.ic_check_circle_48dp));
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(mActivity, getString(R.string.setting_failure), Toast.LENGTH_SHORT).show();
+                    changeRadiusButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+                }
+            });
+        }else{
+            Toast.makeText(mActivity, getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void radiusTextClick(View v) {
+        changeRadiusButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
+    }
+
+    public void radiusButtonClick(View v) {
+        if (!changeRadiusText.getText().toString().equals("")){
+            Constants.RADIUS = changeRadiusText.getText().toString();
+        changeRadiusButton.setBackground(getDrawable(R.drawable.ic_check_circle_48dp));
+        }else{
+            Toast.makeText(mActivity, getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void deleteButtonClick(View v) {
+        AuthUI.getInstance()
+                .delete(getApplicationContext())
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Workmate w = Constants.CURRENT_WORKMATE;
+                        WorkmateHelper.deleteWorkmate(w.getUid());
+                        if (Constants.CURRENT_WORKMATE.getYourLunch().getName() != null){
+                            ExpectedHelper.deleteExpected(w.getUid(), w.getYourLunch().getName());
+                        }
+                        Intent intent = new Intent(getApplicationContext(), AuthentificationActivity.class);
+                        startActivity(intent);
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        switch (requestCode) {
+            case TAKE_PICTURE:
+                if (resultCode == RESULT_OK && intent.hasExtra("data")) {
+                    Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
+                    if (bitmap != null) {
+                        changePictureButton.setVisibility(View.GONE);
+                        settingProgressBar.setVisibility(View.VISIBLE);
+                        updateFirebasePicture(bitmap);
+                    }
+
+                }
+                break;
+        }
+    }
+
+    public void updateFirebasePicture(Bitmap bitmap){
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(getImageUri(bitmap))
+                .build();
+        userToModify.updateProfile(profileUpdates).addOnSuccessListener(this, new OnSuccessListener<Void>() {
             @Override
-            public void onClick(View v) {
-                new SignOutOrDeleteUser(getApplicationContext(),mActivity).deleteUserFromFirebase();
+            public void onSuccess(Void unused) {
+                Toast.makeText(mActivity, getString(R.string.setting_success), Toast.LENGTH_SHORT).show();
+                changePictureButton.setVisibility(View.VISIBLE);
+                settingProgressBar.setVisibility(View.GONE);
+                updateView();
+                Constants.CURRENT_WORKMATE.setWorkmatePicture(userToModify.getPhotoUrl().toString());
+                updateWorkmateAndExpected();
             }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(mActivity, getString(R.string.setting_failure), Toast.LENGTH_SHORT).show();
+                changePictureButton.setVisibility(View.VISIBLE);
+                settingProgressBar.setVisibility(View.GONE);            }
         });
     }
 
-    private void configureRadiusButton(){
-        changeRadiusButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View v) {
-                Constants.RADIUS = changeRadiusText.getText().toString();
-                changeRadiusButton.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorGreen)));
-            }
-        });
+    public Uri getImageUri(Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public void updateWorkmateAndExpected(){
+        WorkmateHelper.updateWorkmateFromSetting();
+        if (Constants.CURRENT_WORKMATE.getYourLunch().getName() != null){
+            Workmate w = Constants.CURRENT_WORKMATE;
+            ExpectedHelper.createExpected(w.getUid(), w.getYourLunch().getName(), w.getWorkmateName(), w.getWorkmatePicture());
+        }
     }
 }
