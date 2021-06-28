@@ -55,6 +55,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.change_email_txt) EditText changeEmailText;
     @BindView(R.id.change_password_txt) EditText changePasswordText;
     @BindView(R.id.change_radius_txt) EditText changeRadiusText;
+    @BindView(R.id.change_picture_txt) EditText changePictureText;
 
     private Activity mActivity = this;
     private FirebaseUser userToModify;
@@ -91,9 +92,33 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void pictureButtonClick(View view){
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, TAKE_PICTURE);
-    }
+        if (!changePictureText.getText().toString().equals("")){
+            changePictureButton.setVisibility(View.GONE);
+            settingProgressBar.setVisibility(View.VISIBLE);
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setPhotoUri(Uri.parse(changePictureText.getText().toString()))
+                    .build();
+            userToModify.updateProfile(profileUpdates).addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(mActivity, getString(R.string.setting_success), Toast.LENGTH_SHORT).show();
+                    changePictureButton.setVisibility(View.VISIBLE);
+                    settingProgressBar.setVisibility(View.GONE);
+                    updateView();
+                    Constants.CURRENT_WORKMATE.setWorkmatePicture(userToModify.getPhotoUrl().toString());
+                    updateWorkmateAndExpected();
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(mActivity, getString(R.string.setting_failure), Toast.LENGTH_SHORT).show();
+                    changePictureButton.setVisibility(View.VISIBLE);
+                    settingProgressBar.setVisibility(View.GONE);            }
+            });
+        }else{
+            Toast.makeText(mActivity, getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
+        }
+        }
 
     public void nameTextClick(View v) {
         changeNameButton.setBackground(getDrawable(R.drawable.ic_uncheck_circle_48dp));
@@ -195,6 +220,7 @@ public class SettingActivity extends BaseActivity {
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        Toast.makeText(mActivity, "Delete success", Toast.LENGTH_SHORT).show();
                         Workmate w = Constants.CURRENT_WORKMATE;
                         WorkmateHelper.deleteWorkmate(w.getUid());
                         if (Constants.CURRENT_WORKMATE.getYourLunch().getName() != null){
@@ -204,55 +230,6 @@ public class SettingActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        switch (requestCode) {
-            case TAKE_PICTURE:
-                if (resultCode == RESULT_OK && intent.hasExtra("data")) {
-                    Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
-                    if (bitmap != null) {
-                        changePictureButton.setVisibility(View.GONE);
-                        settingProgressBar.setVisibility(View.VISIBLE);
-                        updateFirebasePicture(bitmap);
-                    }
-
-                }
-                break;
-        }
-    }
-
-    public void updateFirebasePicture(Bitmap bitmap){
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(getImageUri(bitmap))
-                .build();
-        userToModify.updateProfile(profileUpdates).addOnSuccessListener(this, new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(mActivity, getString(R.string.setting_success), Toast.LENGTH_SHORT).show();
-                changePictureButton.setVisibility(View.VISIBLE);
-                settingProgressBar.setVisibility(View.GONE);
-                updateView();
-                Constants.CURRENT_WORKMATE.setWorkmatePicture(userToModify.getPhotoUrl().toString());
-                updateWorkmateAndExpected();
-            }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(mActivity, getString(R.string.setting_failure), Toast.LENGTH_SHORT).show();
-                changePictureButton.setVisibility(View.VISIBLE);
-                settingProgressBar.setVisibility(View.GONE);            }
-        });
-    }
-
-    public Uri getImageUri(Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
 
     public void updateWorkmateAndExpected(){

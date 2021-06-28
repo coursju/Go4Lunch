@@ -27,6 +27,7 @@ public class AuthentificationActivity extends BaseActivity {
     @BindView(R.id.email_login_button) Button buttonEmailLogin;
     @BindView(R.id.google_login_button) Button buttonGoogleLogin;
     @BindView(R.id.facebook_login_button) Button buttonFacebookLogin;
+    @BindView(R.id.twitter_login_button) Button buttonTwitterLogin;
 
     @Override
     public int getFragmentLayout() {
@@ -46,6 +47,11 @@ public class AuthentificationActivity extends BaseActivity {
     @OnClick(R.id.facebook_login_button)
     public void onClickLoginFacebookButton() {
         this.startFacebookSignInActivity();
+    }
+
+    @OnClick(R.id.twitter_login_button)
+    public void onClickLoginTwitterButton() {
+        this.startTwitterSignInActivity();
     }
 
     private void startGoogleSignInActivity(){
@@ -78,6 +84,18 @@ public class AuthentificationActivity extends BaseActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                        .setIsSmartLockEnabled(false, true)
+                        .setLogo(R.drawable.ic_lunch)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    private void startTwitterSignInActivity(){
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(
+                                Arrays.asList(new AuthUI.IdpConfig.TwitterBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .setLogo(R.drawable.ic_lunch)
                         .build(),

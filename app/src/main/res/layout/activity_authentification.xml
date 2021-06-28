@@ -100,7 +100,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/start_margin"
                         android:layout_marginEnd="@dimen/end_margin"
-                        android:layout_marginBottom="@dimen/bottom_margin"
                         android:contentDescription="@string/email_login"
                         android:drawableLeft="@drawable/ic_email"
                         android:text="@string/email_login"
@@ -118,7 +117,6 @@
                         android:layout_marginStart="@dimen/start_margin"
                         android:layout_marginTop="@dimen/top_margin"
                         android:layout_marginEnd="@dimen/end_margin"
-                        android:layout_marginBottom="@dimen/bottom_margin"
                         android:drawableLeft="@drawable/ic_facebook"
                         android:text="@string/facebook_login"
                         android:textAlignment="center"
@@ -142,6 +140,22 @@
                         android:textSize="@dimen/text_size_button"
                         android:textStyle="normal"
                         app:backgroundTint="@color/google_button"
+                        app:cornerRadius="10dp" />
+
+                    <Button
+                        android:id="@+id/twitter_login_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/start_margin"
+                        android:layout_marginTop="@dimen/top_margin"
+                        android:layout_marginEnd="@dimen/end_margin"
+                        android:drawableLeft="@drawable/ic_twitter"
+                        android:text="@string/twitter_login"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_button"
+                        android:textStyle="normal"
+                        app:backgroundTint="@color/twitter_button"
                         app:cornerRadius="10dp" />
 
                 </LinearLayout>

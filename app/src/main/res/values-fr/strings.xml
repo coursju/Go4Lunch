@@ -1,0 +1,76 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Go4Lunch</string>
+
+    <!-- Main ACTIVITY -->
+    <string name="main_activity_description">Trouvez un restaurant sympa, et invitez vos collègues pour manger!</string>
+    <string name="facebook_login">Connectez vous avec Facebook</string>
+    <string name="email_login">Connectez vous avec votre Email</string>
+    <string name="google_login">Connectez vous avec Google</string>
+    <string name="twitter_login">Connectez vous avec Twitter</string>
+    <string name="error_not_connected">Vous devez etre connecté !</string>
+    <string name="error_authentication_canceled">Authentication annulée&#8230;</string>
+    <string name="error_no_internet">Pas de connection internet!</string>
+    <string name="error_provider">Provider error !</string>
+    <string name="error_unknown_error">Une erreur inconnue est arrivée&#8230;</string>
+    <string name="connection_succeed">Authentication réussie !</string>
+    <string name="button_login_text_logged">Voir le profile</string>
+    <string name="button_login_text_not_logged">Connection</string>
+    <string name="hungry">J\' ai faim !!!</string>
+
+    <!-- BOTTOM NAVIGATION VIEW -->
+    <string name="bottom_navigation_menu_mapview">Vue Map</string>
+    <string name="bottom_navigation_menu_listview">Vue List</string>
+    <string name="bottom_navigation_workmates">Vue Collègues</string>
+    <string name="bottom_navigation_chat">Chat</string>
+
+    <!-- DRAWER -->
+    <string name="drawer_yourlunch">Votre repas</string>
+    <string name="drawer_settings">Configuration</string>
+    <string name="drawer_logout">Déconnexion</string>
+    <string name="select_a_lunch_place">Vous n avez pas choisi de lieu de repas</string>
+
+    <!-- Used in NavigationDrawer -->
+    <string name="navigation_drawer_open">Ouvrir navigation drawer</string>
+    <string name="navigation_drawer_close">Fermer navigation drawer</string>
+
+    <!-- DETAILS FRAGMENT -->
+    <string name="details_call_button">Appeler</string>
+    <string name="details_like_button">Aimer</string>
+    <string name="details_website_button">Site Web</string>
+
+    <string name="google_key">AIzaSyBM42q3bmSdlAnPGzGesADPLjRVD6KPLbk</string>
+
+    <!-- Toolbar -->
+    <string name="toolbar_search">Recherche</string>
+    <string name="searchbar_hint">Entrez un nom de restaurant</string>
+
+    <!--    WORKMATE LIST-->
+    <string name="you_are_eating">Vous mangez à :</string>
+    <string name="you_havent_decided">Vous n avez pas encore choisi</string>
+    <string name="is_eating">Mange à :</string>
+    <string name="hasnt_decided">N\' a pas choisi encore</string>
+
+    <!--    SETTING-->
+    <string name="setting_title">Configuration</string>
+    <string name="setting_change_name">Changer le nom</string>
+    <string name="setting_delete_account">Effacer le compte</string>
+    <string name="setting_change_email">Changer l\' email</string>
+    <string name="setting_change_password">Changer le mot de passe</string>
+    <string name="setting_change_radius">Changer le périmetre</string>
+    <string name="setting_change_picture">changer la photo</string>
+    <string name="setting_change_picture_text">Copiez - collez le lien http de votre icon </string>
+    <string name="setting_success">Champ modifiée !</string>
+    <string name="setting_failure">Quelque chose c\' est mal passé</string>
+    <string name="empty_field">Le champ est vide !</string>
+
+    <!--    RESTAURANTLISTBUILDER-->
+    <string name="no_near_restaurants">On arrive pas à trouver de restaurant dans le coin !</string>
+    <string name="notification_title">Votre repas</string>
+    <string name="default_notification_channel_id">1234</string>
+
+    <!--    FACEBOOK AUTH-->
+    <string name="facebook_application_id" translatable="false">307660174259885</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb307660174259885</string>
+
+
+</resources>

@@ -6,6 +6,7 @@
     <string name="facebook_login">Sign in with Facebook</string>
     <string name="email_login">Sign in with Email</string>
     <string name="google_login">Sign in with Google</string>
+    <string name="twitter_login">Sign in with Twitter</string>
     <string name="error_not_connected">You need to log in !</string>
     <string name="error_authentication_canceled">Authentication canceled&#8230;</string>
     <string name="error_no_internet">No Internet connection !</string>
@@ -57,6 +58,7 @@
     <string name="setting_change_password">Change password</string>
     <string name="setting_change_radius">Change radius</string>
     <string name="setting_change_picture">change picture</string>
+    <string name="setting_change_picture_text">Copy - paste your thumbnail web link here </string>
     <string name="setting_success">Field modified !</string>
     <string name="setting_failure">Something went wrong</string>
     <string name="empty_field">The field is empty !</string>
