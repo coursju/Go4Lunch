@@ -72,5 +72,8 @@
     <string name="facebook_application_id" translatable="false">307660174259885</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb307660174259885</string>
 
+<!--    TESTS-->
+    <string name="test_none_of_above">NONE OF THE ABOVE</string>
+
 
 </resources>

@@ -227,9 +227,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.action_workmates:
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmWorkmatesListFragment()).commit(); //.addToBackStack(null)
                 break;
-            case R.id.action_chat:
-                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
-                break;
+//            case R.id.action_chat:
+//                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
+//                break;
         }
         return true;
     }
@@ -250,9 +250,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.action_workmates:
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmWorkmatesListFragment()).commit(); //.addToBackStack(null)
                 break;
-            case R.id.action_chat:
-                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
-                break;
+//            case R.id.action_chat:
+//                //this.mainFragment.updateDesignWhenUserClickedBottomView(MainFragment.REQUEST_CHAT);
+//                break;
             default:
                 getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_framelayout, go4LunchViewModel.getmMapsFragment()).commit(); //.addToBackStack(null)
                 break;

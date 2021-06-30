@@ -37,15 +37,18 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha06'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
 
     //GLIDE
     implementation 'com.github.bumptech.glide:glide:4.11.0'
@@ -58,7 +61,7 @@ dependencies {
     //FIREBASE
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation "com.google.firebase:firebase-core:18.0.0"
+    implementation "com.google.firebase:firebase-core:19.0.0"
 
 
     // FirebaseUI
@@ -69,7 +72,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:6.3.0'
 
     //FIREASE MESSAGING
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
 
     // Easy Permissions
     implementation 'pub.devrel:easypermissions:3.0.0'
@@ -78,13 +81,16 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.4.0'
 
     //Google mpas
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+
+    //PlayService Location
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     //Drawer layout
     implementation "androidx.drawerlayout:drawerlayout:1.1.1"
 
     //volley
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.android.volley:volley:1.2.0'
 
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -119,8 +125,8 @@ dependencies {
     // optional - Test helpers for LiveData
     testImplementation "androidx.arch.core:core-testing:$arch_version"
 
-    implementation 'androidx.preference:preference:1.1.0-alpha05'
+    implementation 'androidx.preference:preference:1.1.1'
 
     // Facebook Login
-    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
 }

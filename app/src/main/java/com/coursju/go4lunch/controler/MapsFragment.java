@@ -1,8 +1,12 @@
 package com.coursju.go4lunch.controler;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,14 +78,14 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.i(TAG,"onMapReady");
+        Log.i(TAG, "onMapReady");
         mMap = googleMap;
         updateLocationUI();
         getDeviceLocation();
         configureMarkersListeners();
     }
 
-    private void configureMapsFloatingButton(View view){
+    private void configureMapsFloatingButton(View view) {
         mapsFloatingButton = view.findViewById(R.id.maps_floating_button);
         mapsFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,36 +96,44 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
         });
     }
 
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-        try{
+        try {
             if (mLocationPermissionGranted) {
                 final Task location = mFusedLocationProviderClient.getLastLocation();
+
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: found location!");
-                            Constants.CURRENT_LOCATION = (Location) task.getResult();
-                            LatLng currentPosition = new LatLng(Constants.CURRENT_LOCATION.getLatitude(), Constants.CURRENT_LOCATION.getLongitude());
-                            if (go4LunchViewModel.getRestaurantsList().isEmpty()) {
+                            if (task.getResult() != null){
+                                Log.d(TAG, "onComplete: found location!");
+                                Constants.CURRENT_LOCATION = (Location) task.getResult();
+                                Location currentLocation = (Location) task.getResult();
+                                Log.i(TAG, String.valueOf(task.getResult() == null));
+                                LatLng currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                                if (go4LunchViewModel.getRestaurantsList().isEmpty()) {
                                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.DEFAULT_ZOOM));
-                                findNearbyRestaurants();
-                            }else{
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.DEFAULT_ZOOM));
-                                showRestaurants(go4LunchViewModel.getRestaurantsList());
+                                    findNearbyRestaurants();
+                                } else {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, Constants.DEFAULT_ZOOM));
+                                    showRestaurants(go4LunchViewModel.getRestaurantsList());
+                                }
+                        }else{
+//                            mFusedLocationProviderClient.requestLocationUpdates()
+                        }
+
+                            } else {
+                                Log.d(TAG, "onComplete: current location is null");
+                                Log.e(TAG, "Exception: %s", task.getException());
+                                Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
                             }
 
-                        } else {
-                            Log.d(TAG, "onComplete: current location is null");
-                            Log.e(TAG, "Exception: %s", task.getException());
-                            Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
             }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 

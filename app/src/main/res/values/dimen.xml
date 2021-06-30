@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MAIN ACTIVITY DIMENS -->
-    <dimen name="logo_size">150dip</dimen>
-    <dimen name="logo_top_margin">20dip</dimen>
-    <dimen name="logo_bottom_margin">20dip</dimen>
+    <dimen name="logo_size">150dp</dimen>
+    <dimen name="logo_top_margin">20dp</dimen>
+    <dimen name="logo_bottom_margin">20dp</dimen>
 
 
-    <dimen name="margin">5dip</dimen>
-    <dimen name="half_margin">10dip</dimen>
-    <dimen name="large_margin">15dip</dimen>
-    <dimen name="big_margin">20dip</dimen>
-    <dimen name="very_big_margin">50dip</dimen>
-    <dimen name="top_margin">10dip</dimen>
-    <dimen name="bottom_margin">10dip</dimen>
-    <dimen name="start_margin">40dip</dimen>
-    <dimen name="end_margin">40dip</dimen>
+    <dimen name="margin">5dp</dimen>
+    <dimen name="half_margin">10dp</dimen>
+    <dimen name="large_margin">15dp</dimen>
+    <dimen name="big_margin">20dp</dimen>
+    <dimen name="very_big_margin">50dp</dimen>
+    <dimen name="top_margin">10dp</dimen>
+    <dimen name="bottom_margin">10dp</dimen>
+    <dimen name="start_margin">40dp</dimen>
+    <dimen name="end_margin">40dp</dimen>
 
     <dimen name="title_size">52sp</dimen>
     <dimen name="title_drawer_size">45sp</dimen>

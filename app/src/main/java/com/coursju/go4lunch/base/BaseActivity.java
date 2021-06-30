@@ -1,13 +1,8 @@
 package com.coursju.go4lunch.base;
 
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.os.Build;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,34 +10,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.coursju.go4lunch.R;
-import com.coursju.go4lunch.api.ExpectedHelper;
-import com.coursju.go4lunch.api.FavoritesHelper;
 import com.coursju.go4lunch.authentification.AuthentificationActivity;
 import com.coursju.go4lunch.controler.MainActivity;
-import com.coursju.go4lunch.modele.Expected;
-import com.coursju.go4lunch.utils.Constants;
 import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -57,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.setContentView(this.getFragmentLayout());
         ButterKnife.bind(this);
         Log.i(TAG, "onCreate");
+        getLocationPermission();
     }
 
     public abstract int getFragmentLayout();
@@ -64,7 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Nullable
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
 
-    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+    public Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 
     protected OnFailureListener onFailureListener(){
         return new OnFailureListener() {
@@ -79,4 +62,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AuthentificationActivity.class);
         startActivity(intent);
     }
+
+    protected void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{ACCESS_FINE_LOCATION},
+                    1234);
+        }
+    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        switch (requestCode) {
+//            case 1234: {
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    startActivity(new Intent(this, MainActivity.class));
+//                }
+//            }
+//        }
+//    }
 }

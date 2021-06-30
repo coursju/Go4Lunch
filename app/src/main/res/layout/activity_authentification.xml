@@ -9,13 +9,13 @@
     tools:context="com.coursju.go4lunch.authentification.AuthentificationActivity">
 
         <!-- BACKGROUND PICTURE -->
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleX="2.2"
-            android:scaleY="1"
-            android:gravity="center"
-            android:background="@drawable/ic_background_resto"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_background_resto"
+        android:gravity="center"
+        android:scaleX="2.2"
+        android:scaleY="1" />
 
         <!-- MAIN CONTAINER -->
         <LinearLayout
