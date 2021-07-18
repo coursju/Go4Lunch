@@ -39,8 +39,8 @@ import static org.hamcrest.Matchers.allOf;
 public class Go4LunchUITest {
     private UiDevice mUiDevice;
     // If your emulator is slow to show UI, and test failed, increase the sleep time
-    private int sleepSpeed1 = 2000;
-    private int sleepSpeed2 = 5000;
+    private int sleepSpeed1 = 5000; // 10000 recommanded for Windows devices
+    private int sleepSpeed2 = 10000; // 20000 recommanded for Windows devices
 
     @Before
     public void before() throws Exception {
