@@ -21,7 +21,9 @@ import com.coursju.go4lunch.modele.Workmate;
 import com.coursju.go4lunch.utils.Constants;
 import com.coursju.go4lunch.viewmodel.Go4LunchViewModel;
 
-import java.time.LocalDate;
+//import java.time.LocalDate;
+import org.threeten.bp.LocalDate;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +68,7 @@ public class MyRestaurantListRecyclerViewAdapter extends RecyclerView.Adapter<My
         holder.mWorkmatesNumber.setText("("+i+")");
         holder.itemRestoOverview.setImageBitmap(mValues.get(position).getBitmap());
 
-        int day = LocalDate.now().getDayOfWeek().getValue();
+        int day = LocalDate.now().getDayOfWeek().getValue() - 1;
         if (mValues.get(position).getOpeningHours() != null){
             if (mValues.get(position).getOpeningHours().size() > 0){
                 String[] tab = mValues.get(position).getOpeningHours().get(day).split("day: ");

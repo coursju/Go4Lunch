@@ -54,7 +54,6 @@ public class SignOutOrDeleteUser {
                         }
                         Intent intent = new Intent(mContext, AuthentificationActivity.class);
                         mContext.startActivity(intent);
-                        // static MainActivity.finish(); marche non plus
                         break;
                     default:
                         break;

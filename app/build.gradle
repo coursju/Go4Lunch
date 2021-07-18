@@ -129,4 +129,8 @@ dependencies {
 
     // Facebook Login
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+
+    // https://mvnrepository.com/artifact/org.threeten/threetenbp
+    implementation group: 'org.threeten', name: 'threetenbp', version: '1.5.1'
+
 }

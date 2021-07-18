@@ -1,12 +1,8 @@
 package com.coursju.go4lunch.controler;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -120,7 +116,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
                                     showRestaurants(go4LunchViewModel.getRestaurantsList());
                                 }
                         }else{
-//                            mFusedLocationProviderClient.requestLocationUpdates()
+                              Toast.makeText(getContext(), "Google Play Services Problem", Toast.LENGTH_SHORT).show();
                         }
 
                             } else {

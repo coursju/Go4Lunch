@@ -47,8 +47,8 @@
     <!--    WORKMATE LIST-->
     <string name="you_are_eating">Vous mangez à :</string>
     <string name="you_havent_decided">Vous n avez pas encore choisi</string>
-    <string name="is_eating">Mange à :</string>
-    <string name="hasnt_decided">N\' a pas choisi encore</string>
+    <string name="is_eating">mange à :</string>
+    <string name="hasnt_decided">n\' a pas choisi encore</string>
 
     <!--    SETTING-->
     <string name="setting_title">Configuration</string>

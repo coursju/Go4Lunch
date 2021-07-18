@@ -1,6 +1,5 @@
 package com.coursju.go4lunch.api;
 
-import com.coursju.go4lunch.modele.Favorite;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,12 +24,4 @@ public class FavoritesHelper {
                 .document(restaurantName)
                 .set(map, SetOptions.merge());
     }
-
-//    public static Task<Void> deleteFavorite(String uid, String restaurantName) {
-//        return FavoritesHelper.getFavoritesCollection().document(restaurantName).collection("liked").document(uid).delete();
-//    }
-
-//    public static CollectionReference getFavoriteRestaurant(String restaurantName){
-//        return FavoritesHelper.getFavoritesCollection().document(restaurantName).collection("liked");
-//    }
 }
