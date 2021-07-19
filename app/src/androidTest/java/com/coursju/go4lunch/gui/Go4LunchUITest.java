@@ -38,9 +38,13 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class Go4LunchUITest {
     private UiDevice mUiDevice;
-    // If your emulator is slow to show UI, and test failed, increase the sleep time
-    private int sleepSpeed1 = 5000; // 10000 recommanded for Windows devices
-    private int sleepSpeed2 = 10000; // 20000 recommanded for Windows devices
+
+    /* If into your emulator, google places API is slow to return result,
+       and test failed, increase the waitForGooglePlacesReturnDelay variable value
+    */
+    private final int waitForUiElementsReady = 5000;
+    private final int waitForGooglePlacesReturnDelay = 10000;
+
 
     @Before
     public void before() throws Exception {
@@ -71,18 +75,18 @@ public class Go4LunchUITest {
                 .perform(scrollTo(), replaceText("db@db.db"), closeSoftKeyboard());
         onView(allOf(withId(R.id.button_next)))
                 .perform(scrollTo(), click());
-        Thread.sleep(sleepSpeed1);
+        Thread.sleep(waitForUiElementsReady);
         onView(allOf(withId(R.id.password)))
                 .perform(scrollTo(), replaceText("dbdbdb"), closeSoftKeyboard());
         onView(allOf(withId(R.id.button_done)))
                 .perform(scrollTo(), click());
-        Thread.sleep(sleepSpeed1);
+        Thread.sleep(waitForUiElementsReady);
         }
     }
 
     @Test
     public void drawerHeaderTest() throws InterruptedException {
-        Thread.sleep(sleepSpeed1);
+        Thread.sleep(waitForUiElementsReady);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.drawer_user_name))).check(matches(withText("db")));
         onView(allOf(withId(R.id.drawer_user_email))).check(matches(withText("db@db.db")));
@@ -92,14 +96,14 @@ public class Go4LunchUITest {
     public void setupExist() throws InterruptedException {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.activity_main_drawer_settings)).perform( click());
-        Thread.sleep(sleepSpeed1);
+        Thread.sleep(waitForUiElementsReady);
         onView(withId(R.id.delete_user_button))
                 .check(matches(withText(mActivityTestRule.getActivity().getResources().getString(R.string.setting_delete_account))));
     }
 
     @Test
     public void bottomNavigationContent() throws InterruptedException {
-        Thread.sleep(sleepSpeed2);
+        Thread.sleep(waitForGooglePlacesReturnDelay);
         onView(withId(R.id.action_listview)).perform(click());
         onView(withId(R.id.action_workmates)).perform(click());
         onView(withId(R.id.action_map)).perform(click());
@@ -107,7 +111,7 @@ public class Go4LunchUITest {
 
     @Test
     public void detailsExist() throws InterruptedException {
-        Thread.sleep(sleepSpeed2);
+        Thread.sleep(waitForGooglePlacesReturnDelay);
         onView(withId(R.id.action_listview))
                 .perform(click());
         onView(allOf(withId(R.id.list), isDisplayed()))
@@ -118,16 +122,16 @@ public class Go4LunchUITest {
 
     @Test
     public void workmateListContentOne() throws InterruptedException {
-        Thread.sleep(sleepSpeed2);
+        Thread.sleep(waitForGooglePlacesReturnDelay);
         onView(withId(R.id.action_workmates)).perform(click());
-        Thread.sleep(sleepSpeed1);
+        Thread.sleep(waitForUiElementsReady);
         onView(allOf(withId(R.id.list), isDisplayed()))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
     }
 
     @Test
     public void searchButtonExist() throws InterruptedException {
-        Thread.sleep(sleepSpeed2);
+        Thread.sleep(waitForUiElementsReady);
         onView(withId(R.id.app_bar_search)).check(matches(isClickable())).perform(click());
         onView(withId(R.id.input_search)).check(matches(isDisplayed()));
     }
