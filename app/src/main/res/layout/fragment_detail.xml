@@ -22,8 +22,8 @@
             android:focusable="auto"
             android:foreground="@drawable/ic_check_circle_48dp"
             android:foregroundTint="@color/white"
-            android:translationX="300dp"
-            android:translationY="270dp"
+            android:translationX="260dp"
+            android:translationY="260dp"
             app:backgroundTint="@null" />
 
         <LinearLayout
