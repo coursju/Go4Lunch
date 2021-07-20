@@ -22,7 +22,7 @@
             android:focusable="auto"
             android:foreground="@drawable/ic_check_circle_48dp"
             android:foregroundTint="@color/white"
-            android:translationX="320dp"
+            android:translationX="300dp"
             android:translationY="270dp"
             app:backgroundTint="@null" />
 

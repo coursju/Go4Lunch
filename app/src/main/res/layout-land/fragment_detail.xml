@@ -23,7 +23,7 @@
             android:foreground="@drawable/ic_check_circle_48dp"
             android:foregroundTint="@color/white"
             android:translationX="280dp"
-            android:translationY="280dp"
+            android:translationY="250dp"
             app:backgroundTint="@null" />
 
         <LinearLayout

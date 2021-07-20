@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.coursju.go4lunch.R;
@@ -57,14 +58,6 @@ public class NotificationsService extends FirebaseMessagingService {
     }
 
     private void sendVisualNotification(String messageBody) {
-
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle(getString(R.string.notification_title));
-        inboxStyle.addLine(messageBody);
-
         String channelId = getString(R.string.default_notification_channel_id);
 
         NotificationCompat.Builder notificationBuilder =
@@ -72,10 +65,9 @@ public class NotificationsService extends FirebaseMessagingService {
                         .setSmallIcon(R.drawable.ic_logo_go4lunch_256)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(getString(R.string.notification_title))
-                        .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setContentIntent(pendingIntent)
-                        .setStyle(inboxStyle);
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(messageBody));
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
