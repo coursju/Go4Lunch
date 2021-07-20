@@ -33,7 +33,6 @@ public class ExpectedFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            //TODO remove ponctuations on restaurants names
             CollectionReference ref = ExpectedHelper.getExpectedRestaurant(Constants.DETAILS_RESTAURANT.getName());
 
             ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

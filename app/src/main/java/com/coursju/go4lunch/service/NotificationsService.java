@@ -34,7 +34,7 @@ public class NotificationsService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             String message = remoteMessage.getNotification().getBody();
             Log.i(TAG, message);
-            if (Constants.CURRENT_WORKMATE.getYourLunch() != null) {
+            if (Constants.CURRENT_WORKMATE.getYourLunch().getName() != null) {
                 CollectionReference ref = ExpectedHelper.getExpectedRestaurant(Constants.CURRENT_WORKMATE.getYourLunch().getName());
                 ref.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
